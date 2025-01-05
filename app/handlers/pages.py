@@ -2,8 +2,8 @@
 import logging
 from aiogram import types, Router, F
 from service.core import MusicService
-from .search import map_song_to_db
 from templates import inline, texts
+from .search import map_song_to_db
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -18,6 +18,7 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
         async with MusicService() as service:
             songs = await service.get_songs_list(keyword)
         songs = await map_song_to_db(songs)
+
         await callback.message.edit_text(
             texts.SEARCH_RESULTS.format(keyword=keyword),
             reply_markup=inline.get_keyboard_of_songs(keyword, songs, page)

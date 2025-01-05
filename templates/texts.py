@@ -25,4 +25,7 @@ SEARCH_RESULTS: str = (
 
 SENDING_SONG: str = "🎶 Sending song..."
 
+
+PROMO_CAPTION: str = "<a href='https://t.me/{username}'>🔍 Search music</a>"
+
 ERROR: str = "🚨 Something went wrong, try again later."

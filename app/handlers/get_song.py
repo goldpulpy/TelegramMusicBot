@@ -31,6 +31,7 @@ async def get_song_handler(callback: types.CallbackQuery, bot: Bot) -> None:
         await callback.message.answer_audio(
             audio_file,
             title=song.name,
+            caption=texts.PROMO_CAPTION.format(username=bot._me.username),
             thumbnail=thumbnail_file,
         )
 
