@@ -29,6 +29,6 @@ async def account_handler(message: types.Message, user: User) -> None:
 
 
 def register(router: Router) -> None:
-    """Registers start handler with the router."""
+    """Registers account handler with the router."""
     router.message.register(account_handler, Command("account"))
     router.message.register(account_handler, F.text == "👤 Account")

@@ -40,7 +40,7 @@ async def search_handler(message: types.Message, user: User) -> None:
     try:
         search_message = await message.answer(texts.SEARCHING)
         async with MusicService() as service:
-            songs = await service.get_music_list(message.text)
+            songs = await service.get_songs_list(message.text)
 
         songs = await map_song_to_db(songs)
         await search_message.edit_text(
@@ -53,5 +53,5 @@ async def search_handler(message: types.Message, user: User) -> None:
 
 
 def register(router: Router) -> None:
-    """Registers start handler with the router."""
+    """Registers search handler with the router."""
     router.message.register(search_handler)

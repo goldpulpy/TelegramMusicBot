@@ -1,6 +1,5 @@
 """Music service core module for downloading and searching music."""
 import logging
-from io import BytesIO
 from typing import Optional
 
 import aiohttp
@@ -45,7 +44,7 @@ class MusicService:
             await self._session.close()
             self._session = None
 
-    async def get_music_list(self, keyword: str) -> list[Song]:
+    async def get_songs_list(self, keyword: str) -> list[Song]:
         """Search for music by keyword."""
         if not self._session:
             await self.connect()
@@ -70,7 +69,7 @@ class MusicService:
         except (aiohttp.ClientError, TimeoutError) as e:
             raise MusicServiceError(f"Failed to search music: {str(e)}") from e
 
-    async def download_music(self, song: Song) -> BytesIO:
+    async def get_song_bytes(self, song: Song) -> bytes:
         """Download music file."""
         if not self._session:
             await self.connect()
@@ -83,9 +82,7 @@ class MusicService:
                 timeout=self._config.timeout
             ) as response:
                 response.raise_for_status()
-                file = BytesIO(await response.read())
-                file.name = f"{song.name}.mp3"
-                return file
+                return await response.read()
 
         except (aiohttp.ClientError, TimeoutError) as e:
             raise MusicServiceError(

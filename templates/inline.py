@@ -11,7 +11,7 @@ def get_keyboard_of_songs(songs: list[Song]) -> InlineKeyboardMarkup:
             [
                 InlineKeyboardButton(
                     text=song.name,
-                    callback_data=f"download:{song.id}"
+                    callback_data=f"song:id:{song.id}"
                 )
             ]
         )
