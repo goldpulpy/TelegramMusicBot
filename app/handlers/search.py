@@ -38,16 +38,17 @@ async def update_search_stat(user: User, keyword: str) -> None:
 async def search_handler(message: types.Message, user: User) -> None:
     """Handles the search."""
     try:
+        keyword = message.text.replace(":", "").strip()
         search_message = await message.answer(texts.SEARCHING)
         async with MusicService() as service:
-            songs = await service.get_songs_list(message.text)
+            songs = await service.get_songs_list(keyword)
 
         songs = await map_song_to_db(songs)
         await search_message.edit_text(
-            texts.SEARCH_RESULTS.format(keyword=message.text),
-            reply_markup=inline.get_keyboard_of_songs(songs)
+            texts.SEARCH_RESULTS.format(keyword=keyword),
+            reply_markup=inline.get_keyboard_of_songs(keyword, songs)
         )
-        await update_search_stat(user, message.text)
+        await update_search_stat(user, keyword)
     except Exception as e:
         logger.error(f"Failed to send message: {e}")
 

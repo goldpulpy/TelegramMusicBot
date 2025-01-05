@@ -35,6 +35,7 @@ async def get_song_handler(callback: types.CallbackQuery, bot: Bot) -> None:
         )
 
     except Exception as e:
+        await callback.message.answer(texts.ERROR)
         logger.error(f"Failed to send song: {e}")
 
 

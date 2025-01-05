@@ -24,3 +24,5 @@ SEARCH_RESULTS: str = (
 )
 
 SENDING_SONG: str = "🎶 Sending song..."
+
+ERROR: str = "🚨 Something went wrong, try again later."
