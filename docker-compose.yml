@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  app:
+    image: telegram-music-bot
+    container_name: telegram-music-bot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    env_file:
+      - .env
