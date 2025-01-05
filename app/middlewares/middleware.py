@@ -65,7 +65,7 @@ class Middleware(BaseMiddleware):
         user_data: Dict[str, Any]
     ) -> User:
         """Gets existing user or creates new one."""
-        db_user = await user_crud.get(user_id)
+        db_user = await user_crud.get(id=user_id)
 
         if not db_user:
             db_user = await user_crud.create(**user_data)

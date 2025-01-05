@@ -15,3 +15,9 @@ ACCOUNT: str = (
     "<b>Date of registration:</b> <code>{date_registration}</code>\n"
     "<b>Search queries:</b> <code>{search_queries}</code>\n"
 )
+
+SEARCHING: str = "🔎 Searching..."
+
+SEARCH_RESULTS: str = (
+    "Search results for <code>{keyword}</code>:"
+)

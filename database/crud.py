@@ -6,7 +6,9 @@ from contextlib import asynccontextmanager
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy import select
 from .engine import async_session_factory
+
 
 T = TypeVar('T')
 
@@ -43,7 +45,7 @@ class CRUD:
             try:
                 await session.commit()
                 await session.refresh(instance)
-                logger.info(
+                logger.debug(
                     "%s created with ID: %s", self.model.__name__,
                     getattr(instance, 'id', 'unknown')
                 )
@@ -55,17 +57,23 @@ class CRUD:
                 )
                 raise
 
-    async def get(self, id: int) -> T:
-        """Retrieve a record by ID."""
+    async def get(self, **kwargs) -> T:
+        """Retrieve a record by any field."""
         async with self.get_session() as session:
-            instance = await session.get(self.model, id)
+            query = await session.execute(
+                select(self.model).filter_by(**kwargs)
+            )
+            instance = query.scalar_one_or_none()
+
             if instance:
-                logger.info(
-                    "%s retrieved with ID: %s", self.model.__name__, id
+                logger.debug(
+                    "%s retrieved with filters: %s", self.model.__name__,
+                    kwargs
                 )
             else:
-                logger.warning(
-                    "%s with ID %s not found.", self.model.__name__, id
+                logger.debug(
+                    "%s not found with filters: %s", self.model.__name__,
+                    kwargs
                 )
             return instance
 
@@ -78,7 +86,7 @@ class CRUD:
             try:
                 await session.commit()
                 await session.refresh(instance)
-                logger.info(
+                logger.debug(
                     "%s updated with ID: %s", self.model.__name__,
                     getattr(instance, 'id', 'unknown')
                 )
@@ -97,7 +105,7 @@ class CRUD:
             try:
                 await session.delete(instance)
                 await session.commit()
-                logger.info(
+                logger.debug(
                     "%s deleted with ID: %s", self.model.__name__,
                     getattr(instance, 'id', 'unknown')
                 )

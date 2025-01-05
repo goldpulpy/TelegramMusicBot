@@ -15,6 +15,8 @@ logger = logging.getLogger(__name__)
 
 class MusicService:
     """Service for searching and downloading music."""
+    BASE_URL = "https://mp3wr.com"
+    DOWNLOAD_URL = "https://cdn.mp3wr.com"
 
     def __init__(self, config: Optional[ServiceConfig] = None) -> None:
         """Initialize music service with optional configuration."""
@@ -48,7 +50,7 @@ class MusicService:
         if not self._session:
             await self.connect()
 
-        url = f"{self._config.base_url}/search/{keyword}"
+        url = f"{self.BASE_URL}/search/{keyword}"
         logger.info("Searching music with keyword: %s", keyword)
 
         try:
@@ -77,7 +79,7 @@ class MusicService:
 
         try:
             async with self._session.get(
-                song.download_url,
+                f"{self.DOWNLOAD_URL}/?h={song.hash}",
                 timeout=self._config.timeout
             ) as response:
                 response.raise_for_status()
