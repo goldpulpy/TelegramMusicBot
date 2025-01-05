@@ -8,7 +8,7 @@ START: str = (
 )
 
 ACCOUNT: str = (
-    "<b>Account information</b>\n\n"
+    "<b>👤 Account information</b>\n\n"
     "<b>ID:</b> <code>{user_id}</code>\n"
     "<b>Username:</b> <code>{username}</code>\n"
     "<b>Name:</b> <code>{first_name}</code>\n"
@@ -19,5 +19,8 @@ ACCOUNT: str = (
 SEARCHING: str = "🔎 Searching..."
 
 SEARCH_RESULTS: str = (
-    "Search results for <code>{keyword}</code>:"
+    "Search results for <b>{keyword}</b>\n\n"
+    "Tap on the song to download it."
 )
+
+SENDING_SONG: str = "🎶 Sending song..."

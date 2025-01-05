@@ -19,10 +19,13 @@ class Song:
 
     name: str
     hash: str
+    thumbnail_hash: str
 
     @classmethod
     def from_element(cls, element: BeautifulSoup) -> "Song":
         """Create Song from BeautifulSoup element"""
         name = element.find(class_="artist_name").text.strip()
         hash = element.find(class_="right").get("data-id").split("?h=")[-1]
-        return cls(name=name, hash=hash)
+        thumbnail = element.find(class_="little_thumb")
+        thumbnail_hash = thumbnail.find("img").get("data-src").split("/")[-1]
+        return cls(name=name, hash=hash, thumbnail_hash=thumbnail_hash)

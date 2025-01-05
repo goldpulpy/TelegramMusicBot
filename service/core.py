@@ -15,7 +15,8 @@ logger = logging.getLogger(__name__)
 class MusicService:
     """Service for searching and downloading music."""
     BASE_URL = "https://mp3wr.com"
-    DOWNLOAD_URL = "https://cdn.mp3wr.com"
+    SONG_DOWNLOAD_URL = "https://cdn.mp3wr.com"
+    THUMBNAIL_URL = "https://lh3.googleusercontent.com"
 
     def __init__(self, config: Optional[ServiceConfig] = None) -> None:
         """Initialize music service with optional configuration."""
@@ -60,7 +61,7 @@ class MusicService:
                 soup = BeautifulSoup(await response.text(), "html.parser")
                 songs = [
                     Song.from_element(song_data)
-                    for song_data in soup.find_all(class_="song_datas")
+                    for song_data in soup.find_all("item")
                 ]
 
             logger.info("Found %d songs", len(songs))
@@ -69,16 +70,18 @@ class MusicService:
         except (aiohttp.ClientError, TimeoutError) as e:
             raise MusicServiceError(f"Failed to search music: {str(e)}") from e
 
-    async def get_song_bytes(self, song: Song) -> bytes:
-        """Download music file."""
+    async def _download_data(
+        self, url: str, resource_type: str, song_name: str
+    ) -> bytes:
+        """Generic method for downloading data."""
         if not self._session:
             await self.connect()
 
-        logger.info("Downloading song: %s", song.name)
+        logger.info("Downloading %s for song: %s", resource_type, song_name)
 
         try:
             async with self._session.get(
-                f"{self.DOWNLOAD_URL}/?h={song.hash}",
+                url,
                 timeout=self._config.timeout
             ) as response:
                 response.raise_for_status()
@@ -86,4 +89,14 @@ class MusicService:
 
         except (aiohttp.ClientError, TimeoutError) as e:
             raise MusicServiceError(
-                f"Failed to download music: {str(e)}") from e
+                f"Failed to download {resource_type}: {str(e)}") from e
+
+    async def get_song_bytes(self, song: Song) -> bytes:
+        """Download music file."""
+        url = f"{self.SONG_DOWNLOAD_URL}/?h={song.hash}"
+        return await self._download_data(url, "song", song.name)
+
+    async def get_thumbnail_bytes(self, song: Song) -> bytes:
+        """Download thumbnail image."""
+        url = f"{self.THUMBNAIL_URL}/{song.thumbnail_hash}"
+        return await self._download_data(url, "thumbnail", song.name)

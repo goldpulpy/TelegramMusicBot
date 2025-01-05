@@ -9,7 +9,7 @@
 
 Bot for searching and listening to music in Telegram 🎶
 
-Language support: `English`, `Russian`
+Language support: 🇬🇧 `English`, 🇷🇺 `Russian`
 
 ## Setup application ⚙️
 

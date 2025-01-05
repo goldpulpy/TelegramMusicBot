@@ -11,4 +11,5 @@ class Song(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     hash = Column(String)
     name = Column(String)
+    thumbnail_hash = Column(String)
     created_at = Column(DateTime, default=func.now())
