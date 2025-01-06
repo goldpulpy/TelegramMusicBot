@@ -1,9 +1,10 @@
 """Pages handler for the bot."""
 import logging
 from aiogram import types, Router, F
-from service.core import MusicService
+from service.data import Song
 from templates import inline, texts
-from .search import map_song_to_db
+from app.utils import load_songs_from_db
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -12,16 +13,14 @@ logger = logging.getLogger(__name__)
 async def pages_handler(callback: types.CallbackQuery) -> None:
     """Handles the pages navigation."""
     try:
-        _, _, page, keyword = callback.data.split(":")
-        page = int(page)
-
-        async with MusicService() as service:
-            songs = await service.get_songs_list(keyword)
-        songs = await map_song_to_db(songs)
+        _, _, search_id, page, keyword = callback.data.split(":")
+        songs: list[Song] = await load_songs_from_db(search_id)
 
         await callback.message.edit_text(
             texts.SEARCH_RESULTS.format(keyword=keyword),
-            reply_markup=inline.get_keyboard_of_songs(keyword, songs, page)
+            reply_markup=inline.get_keyboard_of_songs(
+                keyword, songs, search_id, int(page)
+            )
         )
     except Exception as e:
         logger.error(f"Failed to send message: {e}")

@@ -60,8 +60,8 @@ class MusicService:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")
                 songs = [
-                    Song.from_element(song_data)
-                    for song_data in soup.find_all("item")
+                    Song.from_element(song_data, index)
+                    for index, song_data in enumerate(soup.find_all("item"))
                 ]
 
             logger.info("Found %d songs", len(songs))

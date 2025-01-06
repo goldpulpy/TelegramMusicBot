@@ -1,6 +1,26 @@
 version: "3.8"
 
 services:
+  db:
+    image: postgres:17-alpine
+    restart: always
+    container_name: telegram-music-bot-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - telegram-music-bot-db:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer:latest
+    container_name: telegram-music-bot-adminer
+    restart: always
+    ports:
+      - ${ADMINER_PORT}:8080
+    depends_on:
+      - db
+
   app:
     image: telegram-music-bot
     container_name: telegram-music-bot
@@ -8,5 +28,13 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
-    env_file:
-      - .env
+    environment:
+      BOT_TOKEN: ${BOT_TOKEN}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    depends_on:
+      - db
+
+volumes:
+  telegram-music-bot-db:

@@ -17,15 +17,26 @@ class ServiceConfig:
 class Song:
     """Song data class"""
 
+    index: int
     name: str
+    title: str
+    performer: str
     hash: str
     thumbnail_hash: str
 
     @classmethod
-    def from_element(cls, element: BeautifulSoup) -> "Song":
+    def from_element(cls, element: BeautifulSoup, index: int) -> "Song":
         """Create Song from BeautifulSoup element"""
-        name = element.find(class_="artist_name").text.strip()
+        full_name = element.find(class_="artist_name").text.strip()
+        performer, title = full_name.split(" - ", 1)
         hash = element.find(class_="right").get("data-id").split("?h=")[-1]
         thumbnail = element.find(class_="little_thumb")
         thumbnail_hash = thumbnail.find("img").get("data-src").split("/")[-1]
-        return cls(name=name, hash=hash, thumbnail_hash=thumbnail_hash)
+        return cls(
+            index=index,
+            name=full_name,
+            title=title,
+            performer=performer,
+            hash=hash,
+            thumbnail_hash=thumbnail_hash,
+        )

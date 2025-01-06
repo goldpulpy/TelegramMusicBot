@@ -11,11 +11,14 @@ class APPConfig:
     bot_token: str = os.getenv('BOT_TOKEN')
 
     # Database Postgres
+    db_host: str = os.getenv('POSTGRES_HOST', 'db')
+    db_port: str = os.getenv('POSTGRES_PORT', '5432')
     db_user: str = os.getenv('POSTGRES_USER')
     db_password: str = os.getenv('POSTGRES_PASSWORD')
     db_name: str = os.getenv('POSTGRES_DB')
     db_url: str = (
-        f"postgresql+asyncpg://{db_user}:{db_password}@db:5432/{db_name}"
+        "postgresql+asyncpg://"
+        f"{db_user}:{db_password}@{db_host}:{db_port}/{db_name}"
     )
 
 

@@ -1,4 +1,4 @@
 aiogram==3.17.0
 sqlalchemy==2.0.36
-aiosqlite==0.20.0
 beautifulsoup4==4.12.3
+asyncpg==0.30.0

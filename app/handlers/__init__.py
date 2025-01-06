@@ -1,8 +1,6 @@
 """Setup router for the bot."""
 from aiogram import Dispatcher, Router
-from . import (
-    start, search, account, get_song, pages
-)
+from . import start, search, get_song, pages
 
 
 def setup(dp: Dispatcher) -> None:
@@ -11,7 +9,6 @@ def setup(dp: Dispatcher) -> None:
 
     # Register routers
     start.register(router)
-    account.register(router)
     search.register(router)
     pages.register(router)
     get_song.register(router)

@@ -1,10 +1,11 @@
-"""Search handler for the bot."""
+"""Get song handler for the bot."""
 import logging
 from aiogram import types, Router, F, Bot
 from aiogram.types import BufferedInputFile
 from service.core import MusicService
-from database.crud import CRUD
-from database.models.song_map import Song
+from service.data import Song
+
+from app.utils import load_songs_from_db
 from templates import texts
 
 logging.basicConfig(level=logging.INFO)
@@ -12,11 +13,11 @@ logger = logging.getLogger(__name__)
 
 
 async def get_song_handler(callback: types.CallbackQuery, bot: Bot) -> None:
-    """Handles the search."""
+    """Get song handler."""
     try:
-        song_id = callback.data.split(":")[-1]
-        song_crud = CRUD(Song)
-        song: Song = await song_crud.get(id=song_id)
+        _, _, search_id, song_index = callback.data.split(":")
+        songs: list[Song] = await load_songs_from_db(search_id)
+        song: Song = songs[int(song_index)]
 
         await callback.answer(texts.SENDING_SONG)
         await bot.send_chat_action(callback.message.chat.id, "upload_document")
@@ -30,7 +31,8 @@ async def get_song_handler(callback: types.CallbackQuery, bot: Bot) -> None:
 
         await callback.message.answer_audio(
             audio_file,
-            title=song.name,
+            title=song.title,
+            performer=song.performer,
             caption=texts.PROMO_CAPTION.format(username=bot._me.username),
             thumbnail=thumbnail_file,
         )
@@ -43,5 +45,5 @@ async def get_song_handler(callback: types.CallbackQuery, bot: Bot) -> None:
 def register(router: Router) -> None:
     """Registers get song handler with the router."""
     router.callback_query.register(
-        get_song_handler, F.data.startswith("song:id:")
+        get_song_handler, F.data.startswith("song:get:")
     )

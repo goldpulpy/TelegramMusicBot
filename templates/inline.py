@@ -1,13 +1,17 @@
 """Inline keyboard templates."""
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
-from database.models.song_map import Song
+from service.data import Song
 
 
 def get_keyboard_of_songs(
-    keyword: str, songs: list[Song], page: int = 0
+    keyword: str,
+    songs: list[Song],
+    search_id: int,
+    page: int = 0
 ) -> InlineKeyboardMarkup:
     """Create paginated inline keyboard for song selection."""
     SONGS_PER_PAGE = 10
+
     total_pages = max((len(songs) - 1) // SONGS_PER_PAGE, 0)
     page = min(max(0, page), total_pages)
 
@@ -18,7 +22,9 @@ def get_keyboard_of_songs(
     keyboard = [
         [
             InlineKeyboardButton(
-                text=song.name, callback_data=f"song:id:{song.id}")
+                text=f"{song.performer} - {song.title}",
+                callback_data=f"song:get:{search_id}:{song.index}"
+            )
         ] for song in current_page_songs
     ]
 
@@ -28,9 +34,13 @@ def get_keyboard_of_songs(
             is_available = page < total_pages if is_next else page > 0
 
             return InlineKeyboardButton(
-                text="➡️" if is_next else "⬅️" if is_available else "⏺️",
+                text="➡️"
+                if is_next and is_available else "⏺️"
+                if is_next and not is_available else "⬅️"
+                if not is_next and is_available else "⏺️",
                 callback_data=(
-                    f"song:page:{page + 1 if is_next else page - 1}:{keyword}"
+                    f"song:page:{search_id}:"
+                    f"{page + 1 if is_next else page - 1}:{keyword}"
                     if is_available else "song:noop"
                 )
             )

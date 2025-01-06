@@ -2,7 +2,7 @@
 import logging
 from aiogram import types, Router, Bot
 from aiogram.filters import CommandStart
-from templates import reply, texts, command
+from templates import texts, command
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -12,11 +12,7 @@ async def start_handler(message: types.Message, bot: Bot) -> None:
     """Handles the /start command."""
     try:
         await bot.set_my_commands(command.COMMANDS)
-        await message.answer(
-            texts.START,
-            reply_markup=reply.menu,
-            link_preview_options=types.LinkPreviewOptions(is_disabled=True)
-        )
+        await message.answer(texts.START)
     except Exception as e:
         logger.error(f"Failed to send message: {e}")
 
