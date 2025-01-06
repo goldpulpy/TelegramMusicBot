@@ -42,7 +42,7 @@ async def search_handler(message: types.Message, user: User) -> None:
         await search_message.edit_text(
             texts.SEARCH_RESULTS.format(keyword=keyword),
             reply_markup=inline.get_keyboard_of_songs(
-                keyword, songs, search.id
+                songs, search.id
             )
         )
     except Exception as e:

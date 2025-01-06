@@ -2,7 +2,7 @@
 import logging
 from aiogram import types, Router, F
 from service.data import Song
-from templates import inline, texts
+from templates import inline
 from app.utils import load_songs_from_db
 
 
@@ -13,13 +13,12 @@ logger = logging.getLogger(__name__)
 async def pages_handler(callback: types.CallbackQuery) -> None:
     """Handles the pages navigation."""
     try:
-        _, _, search_id, page, keyword = callback.data.split(":")
+        _, _, search_id, page = callback.data.split(":")
         songs: list[Song] = await load_songs_from_db(search_id)
 
-        await callback.message.edit_text(
-            texts.SEARCH_RESULTS.format(keyword=keyword),
+        await callback.message.edit_reply_markup(
             reply_markup=inline.get_keyboard_of_songs(
-                keyword, songs, search_id, int(page)
+                songs, search_id, int(page)
             )
         )
     except Exception as e:

@@ -4,7 +4,6 @@ from service.data import Song
 
 
 def get_keyboard_of_songs(
-    keyword: str,
     songs: list[Song],
     search_id: int,
     page: int = 0
@@ -15,9 +14,9 @@ def get_keyboard_of_songs(
     total_pages = max((len(songs) - 1) // SONGS_PER_PAGE, 0)
     page = min(max(0, page), total_pages)
 
-    current_page_songs = songs[
-        page * SONGS_PER_PAGE:(page + 1) * SONGS_PER_PAGE
-    ]
+    start_indx = page * SONGS_PER_PAGE
+    end_indx = (page + 1) * SONGS_PER_PAGE
+    current_page_songs = songs[start_indx:end_indx]
 
     keyboard = [
         [
@@ -34,13 +33,13 @@ def get_keyboard_of_songs(
             is_available = page < total_pages if is_next else page > 0
 
             return InlineKeyboardButton(
-                text="➡️"
+                text="▶️"
                 if is_next and is_available else "⏺️"
-                if is_next and not is_available else "⬅️"
+                if is_next and not is_available else "◀️"
                 if not is_next and is_available else "⏺️",
                 callback_data=(
                     f"song:page:{search_id}:"
-                    f"{page + 1 if is_next else page - 1}:{keyword}"
+                    f"{page + 1 if is_next else page - 1}"
                     if is_available else "song:noop"
                 )
             )
@@ -53,5 +52,10 @@ def get_keyboard_of_songs(
             ),
             create_navigation_button(is_next=True),
         ])
-
+        keyboard.append([
+            InlineKeyboardButton(
+                text="🔽",
+                callback_data=f"song:all:{search_id}:{start_indx}:{end_indx}"
+            )
+        ])
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
