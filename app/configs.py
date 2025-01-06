@@ -10,10 +10,12 @@ class APPConfig:
     # Bot token
     bot_token: str = os.getenv('BOT_TOKEN')
 
-    # Database (SQLite)
-    database_filename: str = os.getenv('DATABASE_FILENAME')
-    database_url: str = (
-        "sqlite+aiosqlite:///" + os.path.join('data', database_filename)
+    # Database Postgres
+    db_user: str = os.getenv('POSTGRES_USER')
+    db_password: str = os.getenv('POSTGRES_PASSWORD')
+    db_name: str = os.getenv('POSTGRES_DB')
+    db_url: str = (
+        f"postgresql+asyncpg://{db_user}:{db_password}@db:5432/{db_name}"
     )
 
 
