@@ -15,4 +15,5 @@ RUN pip install --no-cache-dir --upgrade pip && \
 COPY --chown=appuser:appgroup . .
 USER appuser
 
+RUN pybabel compile -d locales -D messages
 CMD ["python", "main.py"]

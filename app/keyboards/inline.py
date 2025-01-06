@@ -1,6 +1,8 @@
 """Inline keyboard templates."""
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
+
 from service.data import Song
+from locales import support_languages
 
 
 def get_keyboard_of_songs(
@@ -59,3 +61,15 @@ def get_keyboard_of_songs(
             )
         ])
     return InlineKeyboardMarkup(inline_keyboard=keyboard)
+
+
+language_keyboard: InlineKeyboardMarkup = InlineKeyboardMarkup(
+    inline_keyboard=[
+        [
+            InlineKeyboardButton(
+                text=language.name,
+                callback_data=f"language:set:{language.code}"
+            ) for language in support_languages.languages
+        ]
+    ]
+)

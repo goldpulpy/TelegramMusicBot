@@ -1,4 +1,4 @@
 """Filters for the app."""
-from .state import StateFilter
+from .language import LanguageFilter
 
-__all__ = ['StateFilter']
+__all__ = ['LanguageFilter']

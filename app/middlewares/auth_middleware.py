@@ -1,4 +1,4 @@
-"""Middleware module for the app."""
+"""Auth middleware module for the app."""
 import logging
 from typing import Any, Awaitable, Callable, Dict
 
@@ -14,10 +14,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class Middleware(BaseMiddleware):
-    """
-    Middleware for handling user registration in the database.
-    """
+class AuthMiddleware(BaseMiddleware):
+    """Auth middleware for handling user registration in the database."""
 
     async def __call__(
         self,
@@ -36,7 +34,7 @@ class Middleware(BaseMiddleware):
 
         try:
             return await self._get_or_create_user(
-                user_crud, user.id, user_data
+                user, user_crud, user_data
             )
 
         except Exception as e:
@@ -55,26 +53,26 @@ class Middleware(BaseMiddleware):
             'username': user.username,
             'first_name': user.first_name,
             'last_name': user.last_name,
-            'language_code': user.language_code,
         }
 
     @staticmethod
     async def _get_or_create_user(
+        user: User,
         user_crud: CRUD,
-        user_id: int,
         user_data: Dict[str, Any]
     ) -> User:
         """Gets existing user or creates new one."""
-        db_user = await user_crud.get(id=user_id)
+        db_user = await user_crud.get(id=user.id)
 
         if not db_user:
+            user_data['language_code'] = user.language_code
             db_user = await user_crud.create(**user_data)
-            logger.info("User %s registered in the database.", user_id)
+            logger.info("User %s registered in the database.", user.id)
 
         # Update user data if it exists
         else:
             user_data['updated_at'] = func.now()
             db_user = await user_crud.update(db_user, **user_data)
-            logger.info("User %s updated in the database.", user_id)
+            logger.info("User %s updated in the database.", user.id)
 
         return db_user

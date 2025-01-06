@@ -3,6 +3,9 @@ import os
 from dataclasses import dataclass
 
 
+os.environ['TZ'] = os.getenv('TIMEZONE', 'UTC')
+
+
 @dataclass
 class APPConfig:
     """Configuration class for the bot."""

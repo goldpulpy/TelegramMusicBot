@@ -2,11 +2,11 @@
 import logging
 from aiogram import types, Router, F, Bot
 from aiogram.types import BufferedInputFile
+from aiogram.utils.i18n import gettext
 from service.core import MusicService
 from service.data import Song
-
 from app.utils import load_songs_from_db
-from templates import texts
+
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -34,11 +34,11 @@ async def send_song(
             audio_file,
             title=song.title,
             performer=song.performer,
-            caption=texts.PROMO_CAPTION.format(username=bot._me.username),
+            caption=gettext("promo_caption").format(username=bot._me.username),
             thumbnail=thumbnail_file,
         )
     except Exception as e:
-        await callback.message.answer(texts.ERROR)
+        await callback.message.answer(gettext("error"))
         logger.error(f"Failed to send song: {e}")
 
 
@@ -48,7 +48,7 @@ async def get_song_handler(callback: types.CallbackQuery, bot: Bot) -> None:
         _, _, search_id, song_index = callback.data.split(":")
         songs: list[Song] = await load_songs_from_db(search_id)
         song: Song = songs[int(song_index)]
-        await callback.answer(texts.SENDING_SONG)
+        await callback.answer(gettext("song_sending"))
         await send_song(callback, bot, song)
 
     except Exception as e:
@@ -63,7 +63,7 @@ async def get_all_from_page_handler(
         _, _, search_id, start_indx, end_indx = callback.data.split(":")
         songs: list[Song] = await load_songs_from_db(search_id)
         songs = songs[int(start_indx):int(end_indx)]
-        await callback.answer(texts.SENDING_SONG)
+        await callback.answer(gettext("song_sending"))
         for song in songs:
             await send_song(callback, bot, song)
 

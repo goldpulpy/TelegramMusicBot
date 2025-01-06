@@ -1,12 +1,13 @@
 """Search handler for the bot."""
 import logging
 from aiogram import types, Router
+from aiogram.utils.i18n import gettext
 from service.core import MusicService
 from service.data import Song
 from database.crud import CRUD
 from database.models.search_history import SearchHistory
 from database.models.user import User
-from templates import inline, texts
+from app.keyboards import inline
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -33,14 +34,14 @@ async def search_handler(message: types.Message, user: User) -> None:
     try:
         keyword = message.text.replace(":", "").strip()
         search_message = await message.answer(
-            texts.SEARCHING.format(keyword=keyword)
+            gettext("searching").format(keyword=keyword)
         )
         async with MusicService() as service:
             songs = await service.get_songs_list(keyword)
 
         search = await update_search(user, keyword, songs)
         await search_message.edit_text(
-            texts.SEARCH_RESULTS.format(keyword=keyword),
+            gettext("search_result").format(keyword=keyword),
             reply_markup=inline.get_keyboard_of_songs(
                 songs, search.id
             )

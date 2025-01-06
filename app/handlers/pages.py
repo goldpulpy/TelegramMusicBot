@@ -2,7 +2,7 @@
 import logging
 from aiogram import types, Router, F
 from service.data import Song
-from templates import inline
+from app.keyboards import inline
 from app.utils import load_songs_from_db
 
 

@@ -5,8 +5,8 @@ import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.client.bot import DefaultBotProperties
 from aiogram.utils.token import TokenValidationError
+from aiogram.utils.i18n import I18n
 from aiogram.fsm.storage.memory import MemoryStorage
-
 from app import handlers, middlewares, app_config
 from database.engine import init_db
 
@@ -41,9 +41,10 @@ async def main() -> None:
 
     storage = MemoryStorage()
     dp = Dispatcher(storage=storage)
-    logger.info('Successfully created dispatcher and storage instance.')
+    i18n = I18n(path='locales', domain='messages')
+    logger.info('Successfully created dispatcher, i18n and storage instance.')
 
-    middlewares.setup(dp)
+    middlewares.setup(dp, i18n)
     logger.info('Successfully set up middleware.')
 
     handlers.setup(dp)

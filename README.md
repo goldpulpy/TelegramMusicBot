@@ -6,6 +6,8 @@
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue?logo=postgresql)
 ![Docker](https://img.shields.io/badge/Docker-compose-blue?logo=docker)
 ![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
+![Telegram](https://img.shields.io/badge/Telegram-bot-blue?logo=telegram)
+![Adminer](https://img.shields.io/badge/Adminer-blue?logo=adminer)
 
 </div>
 
@@ -13,8 +15,9 @@
 
 - 🎵 Instant music search and playback
 - 🎧 High sound quality
+- 🌅 Audio with cover
 - 📱 Intuitive interface
-- 🌍 Multiple language support
+- 🌍 Multiple language support (English, Russian)
 - 🐳 Easy deployment via Docker
 - 🛡️ Secure data storage in PostgreSQL
 - 📝 License: Apache License 2.0
@@ -43,12 +46,13 @@
 
    ```env
    # Bot Configuration
-   BOT_TOKEN=your_bot_token_here
+   BOT_TOKEN=your_bot_token # Telegram bot token from BotFather
+   TIMEZONE=your_timezone # Example: Europe/Moscow
 
    # Database Configuration
-   POSTGRES_USER=your_username
-   POSTGRES_PASSWORD=your_password
-   POSTGRES_DB=your_database_name
+   POSTGRES_USER=your_username # Example: root
+   POSTGRES_PASSWORD=your_password # Example: root
+   POSTGRES_DB=your_database_name # Example: music_bot
    ```
 
 ### 🎮 Usage
