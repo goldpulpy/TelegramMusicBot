@@ -1,58 +1,86 @@
-<h1 align="center">Telegram Music Bot 🎵</h1>
+<div align="center">
+  <h1>🎵 Telegram Music Bot</h1>
+  <p>Powerful bot for searching and listening to music in Telegram</p>
 
-## Information ℹ️
+![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue?logo=postgresql)
+![Docker](https://img.shields.io/badge/Docker-compose-blue?logo=docker)
+![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)
 
-- Author: `goldpulpy`
-- Python version: `3.11`
-- Database: `PostgreSQL`
-- Pipeline deployment: `Docker Compose`
+</div>
 
-Bot for searching and listening to music in Telegram 🎶
+## ✨ Features
 
-Language support: 🇬🇧 `English`, 🇷🇺 `Russian`
+- 🎵 Instant music search and playback
+- 🎧 High sound quality
+- 📱 Intuitive interface
+- 🌍 Multiple language support
+- 🐳 Easy deployment via Docker
+- 🛡️ Secure data storage in PostgreSQL
+- 📝 License: Apache License 2.0
 
-## Setup application ⚙️
+## 🚀 Quick Start
 
-- First you need to create a bot in [BotFather](https://t.me/botfather)
-- `.env.example` copy and rename to `.env`
-- Fill environment variables
+### Prerequisites
 
-```bash
-# Application
-BOT_TOKEN=YOUR_BOT_TOKEN # Bot token from BotFather
+- Docker and Docker Compose installed
+- Telegram Bot Token ([Get it from BotFather](https://t.me/botfather))
 
-# Database
-POSTGRES_USER=YOUR_USER # Database user (example: root)
-POSTGRES_PASSWORD=YOUR_PASSWORD # Database password (example: root)
-POSTGRES_DB=YOUR_DB_NAME # Database name (example: db)
-```
+### Installation
 
-## Run application ▶️
+1. Clone the repository
 
-1. Install `Docker`
-2. Run application
+   ```bash
+   git clone https://github.com/goldpulpy/telegram-music-bot.git
+   cd telegram-music-bot
+   ```
+
+2. Copy `.env.example` to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+3. Configure your environment variables:
+
+   ```env
+   # Bot Configuration
+   BOT_TOKEN=your_bot_token_here
+
+   # Database Configuration
+   POSTGRES_USER=your_username
+   POSTGRES_PASSWORD=your_password
+   POSTGRES_DB=your_database_name
+   ```
+
+### 🎮 Usage
+
+**Start the bot:**
 
 ```bash
 docker compose up -d
 ```
 
-## Stop application ⏹
+**Stop the bot:**
 
 ```bash
 docker compose down
 ```
 
-## Login to database (Adminer) 🗄
+## 📊 Database Management
 
-Open in browser `http://your_server_ip:8080`
+Access Adminer at `http://your_server_ip:8080`
 
-- Host: `db`
-- Database: `YOUR_DB_NAME`
-- Username: `POSTGRES_USER`
-- Password: `POSTGRES_PASSWORD`
+| Setting  | Value         |
+| -------- | ------------- |
+| Engine   | PostgreSQL    |
+| Host     | db (default)  |
+| Username | your_user     |
+| Password | your_password |
+| Database | your_db_name  |
 
-## License 📜
+## 📝 License
 
-This project is licensed under the Apache License 2.0. See the [LICENSE](LICENSE) file for details
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
 
-<h6 align="center">Created by goldpulpy with ❤️</h6>
+<div align="center">
+  <p>Created with ❤️ by <a href="https://github.com/goldpulpy">goldpulpy</a></p>
+</div>
