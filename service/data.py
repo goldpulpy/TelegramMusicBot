@@ -21,22 +21,29 @@ class Song:
     name: str
     title: str
     performer: str
-    hash: str
-    thumbnail_hash: str
+    audio_url: str
+    thumbnail_url: str
 
     @classmethod
-    def from_element(cls, element: BeautifulSoup, index: int) -> "Song":
+    def from_element(
+        cls,
+        element: BeautifulSoup,
+        index: int,
+        is_search: bool = False,
+    ) -> "Song":
         """Create Song from BeautifulSoup element"""
         full_name = element.find(class_="artist_name").text.strip()
         performer, title = full_name.split(" - ", 1)
-        hash = element.find(class_="right").get("data-id").split("?h=")[-1]
-        thumbnail = element.find(class_="little_thumb")
-        thumbnail_hash = thumbnail.find("img").get("data-src").split("/")[-1]
+        audio_url = element.find(class_="right").get("data-id")
+        thumbnail_element = element.find(
+            class_="little_thumb" if is_search else "resim_thumb"
+        )
+        thumbnail_url = thumbnail_element.find("img").get("data-src")
         return cls(
             index=index,
             name=full_name,
             title=title,
             performer=performer,
-            hash=hash,
-            thumbnail_hash=thumbnail_hash,
+            audio_url=audio_url,
+            thumbnail_url=thumbnail_url,
         )

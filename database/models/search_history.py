@@ -3,7 +3,6 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy import (
     Column, String, DateTime, func, Integer, BigInteger, ForeignKey
 )
-
 from ..engine import Base
 
 

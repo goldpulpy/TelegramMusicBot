@@ -82,6 +82,16 @@ def get_menu_keyboard(gettext: Callable[[str], str]) -> InlineKeyboardMarkup:
         inline_keyboard=[
             [
                 InlineKeyboardButton(
+                    text=gettext("top_button"),
+                    callback_data="song:list:top"
+                ),
+                InlineKeyboardButton(
+                    text=gettext("novelties_button"),
+                    callback_data="song:list:novelties"
+                )
+            ],
+            [
+                InlineKeyboardButton(
                     text=gettext("faq_button"), callback_data="faq"
                 ),
                 InlineKeyboardButton(

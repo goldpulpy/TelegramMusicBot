@@ -38,7 +38,7 @@ async def send_song(
             thumbnail=thumbnail_file,
         )
     except Exception as e:
-        await callback.message.answer(gettext("error"))
+        await callback.message.answer(gettext("send_song_error"))
         logger.error(f"Failed to send song: {e}")
 
 

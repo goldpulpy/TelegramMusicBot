@@ -16,7 +16,6 @@ class MusicService:
     """Service for searching and downloading music."""
     BASE_URL = "https://mp3wr.com"
     SONG_DOWNLOAD_URL = "https://cdn.mp3wr.com"
-    THUMBNAIL_URL = "https://lh3.googleusercontent.com"
 
     def __init__(self, config: Optional[ServiceConfig] = None) -> None:
         """Initialize music service with optional configuration."""
@@ -53,6 +52,22 @@ class MusicService:
         url = f"{self.BASE_URL}/search/{keyword}"
         logger.info("Searching music with keyword: %s", keyword)
 
+        return await self._parse_songs(url, is_search=True)
+
+    async def get_top_songs(self) -> list[Song]:
+        """Get top songs."""
+        url = f"{self.BASE_URL}/besthit"
+        return await self._parse_songs(url)
+
+    async def get_novelties(self) -> list[Song]:
+        """Get novelties."""
+        url = f"{self.BASE_URL}/newhit"
+        return await self._parse_songs(url)
+
+    async def _parse_songs(
+        self, url: str, is_search: bool = False
+    ) -> list[Song]:
+        """Parse songs from the given URL."""
         try:
             async with self._session.get(
                 url, timeout=self._config.timeout
@@ -60,8 +75,11 @@ class MusicService:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")
                 songs = [
-                    Song.from_element(song_data, index)
-                    for index, song_data in enumerate(soup.find_all("item"))
+                    Song.from_element(song_data, index, is_search)
+                    for index, song_data in enumerate(
+                        soup.find_all("item") if is_search
+                        else soup.find_all("li", class_="sarki-liste")
+                    )
                 ]
 
             logger.info("Found %d songs", len(songs))
@@ -93,10 +111,14 @@ class MusicService:
 
     async def get_song_bytes(self, song: Song) -> bytes:
         """Download music file."""
-        url = f"{self.SONG_DOWNLOAD_URL}/?h={song.hash}"
+        url = song.audio_url
+        if url.startswith("/"):
+            url = f"{self.BASE_URL}{song.audio_url}"
         return await self._download_data(url, "song", song.name)
 
     async def get_thumbnail_bytes(self, song: Song) -> bytes:
         """Download thumbnail image."""
-        url = f"{self.THUMBNAIL_URL}/{song.thumbnail_hash}"
+        url = song.thumbnail_url
+        if url.startswith("/"):
+            url = f"{self.BASE_URL}{song.thumbnail_url}"
         return await self._download_data(url, "thumbnail", song.name)

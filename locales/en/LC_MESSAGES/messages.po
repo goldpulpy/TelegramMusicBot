@@ -46,6 +46,18 @@ msgstr "<b>❓ Frequently asked questions</b>\n\n"
 "<b>How to change the language ❓</b>\n"
 "• Send me the /language command in the chat or click the «🌎 Language» button in the menu."
 
+msgid "top_button"
+msgstr "🔥 Top songs"
+
+msgid "top"
+msgstr "<b>🔥 Popular music</b>"
+
+msgid "novelties_button"
+msgstr "🆕 Novelties"
+
+msgid "novelties"
+msgstr "<b>🆕 New music</b>"
+
 msgid "searching"
 msgstr "🔍 Searching: <b>{keyword}</b>"
 
@@ -55,8 +67,8 @@ msgstr "🎧 <b>{keyword}</b>:"
 msgid "song_sending"
 msgstr "🎧 Sending song..."
 
-msgid "error"
-msgstr "❌ Oops! Something went wrong. Please try again in a moment."
+msgid "send_song_error"
+msgstr "❌ Oops! Something went wrong. Audio file is not available."
 
 msgid "promo_caption"
 msgstr "<a href='https://t.me/{username}'>🎵 Discover More Music</a>"
