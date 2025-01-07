@@ -18,20 +18,33 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.1\n"
 
-msgid "language_set"
-msgstr "🇬🇧 Your language has been set to English"
-
 msgid "language_command"
-msgstr "Change language"
+msgstr "🌎 Change language"
 
-msgid "start"
-msgstr "<b>👋 Hi, I'll help you find the song</b>\n\n"
-"Just send it to me:\n"
-"• Artist name 🎤\n"
-"• Song title 🎼\n"
+msgid "language_button"
+msgstr "🌎 Language"
 
-msgid "start_command"
-msgstr "Start the bot"
+msgid "menu"
+msgstr "⭐️ <b>Menu</b>"
+
+msgid "menu_command"
+msgstr "⭐️ Open menu"
+
+msgid "faq_button"
+msgstr "❓ FAQ"
+
+msgid "faq"
+msgstr "<b>❓ Frequently asked questions</b>\n\n"
+"<b>How to search for songs ❓</b>\n"
+"• Type the song name or artist name in the chat.\n\n"
+"<b>How to open the menu ❓</b>\n"
+"• Send me the /menu command in the chat.\n\n"
+"<b>How to save to your phone ❓</b>\n"
+"• Select the desired song and save it to your phone.\n\n"
+"<b>Why is the 🔽 button in the song list❓</b>\n"
+"• Allows you to get all songs from the current page.\n\n"
+"<b>How to change the language ❓</b>\n"
+"• Send me the /language command in the chat or click the «🌎 Language» button in the menu."
 
 msgid "searching"
 msgstr "🔍 Searching: <b>{keyword}</b>"
@@ -47,3 +60,6 @@ msgstr "❌ Oops! Something went wrong. Please try again in a moment."
 
 msgid "promo_caption"
 msgstr "<a href='https://t.me/{username}'>🎵 Discover More Music</a>"
+
+msgid "back_button"
+msgstr "⬅️ Back"

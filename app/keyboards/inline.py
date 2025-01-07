@@ -1,4 +1,5 @@
 """Inline keyboard templates."""
+from typing import Callable
 from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from service.data import Song
@@ -73,3 +74,34 @@ language_keyboard: InlineKeyboardMarkup = InlineKeyboardMarkup(
         ]
     ]
 )
+
+
+def get_menu_keyboard(gettext: Callable[[str], str]) -> InlineKeyboardMarkup:
+    """Get menu keyboard."""
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=gettext("faq_button"), callback_data="faq"
+                ),
+                InlineKeyboardButton(
+                    text=gettext("language_button"), callback_data="language"
+                )
+            ],
+        ]
+    )
+
+
+def get_back_keyboard(
+    gettext: Callable[[str], str], callback_data: str
+) -> InlineKeyboardMarkup:
+    """Get back keyboard."""
+    return InlineKeyboardMarkup(
+        inline_keyboard=[
+            [
+                InlineKeyboardButton(
+                    text=gettext("back_button"), callback_data=callback_data
+                )
+            ]
+        ]
+    )
