@@ -1,0 +1,77 @@
+# English translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-01-06 17:22+0300\n"
+"PO-Revision-Date: 2025-01-06 17:23+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.1\n"
+
+msgid "language_command"
+msgstr "🌎 Change language"
+
+msgid "language_button"
+msgstr "🌎 Language"
+
+msgid "menu"
+msgstr "⭐️ <b>Menu</b>"
+
+msgid "menu_command"
+msgstr "⭐️ Open menu"
+
+msgid "faq_button"
+msgstr "❓ FAQ"
+
+msgid "faq"
+msgstr "<b>❓ Frequently asked questions</b>\n\n"
+"<b>How to search for songs ❓</b>\n"
+"• Type the song name or artist name in the chat.\n\n"
+"<b>How to open the menu ❓</b>\n"
+"• Send me the /menu command in the chat.\n\n"
+"<b>How to save to your phone ❓</b>\n"
+"• Select the desired song and save it to your phone.\n\n"
+"<b>Why is the 🔽 button in the song list❓</b>\n"
+"• Allows you to get all songs from the current page.\n\n"
+"<b>How to change the language ❓</b>\n"
+"• Send me the /language command in the chat or click the «🌎 Language» button in the menu."
+
+msgid "top_button"
+msgstr "🔥 Top songs"
+
+msgid "top"
+msgstr "<b>🔥 Popular music</b>"
+
+msgid "novelties_button"
+msgstr "🆕 Novelties"
+
+msgid "novelties"
+msgstr "<b>🆕 New music</b>"
+
+msgid "searching"
+msgstr "🔍 Searching: <b>{keyword}</b>"
+
+msgid "search_result"
+msgstr "🎧 <b>{keyword}</b>:"
+
+msgid "song_sending"
+msgstr "🎧 Sending song..."
+
+msgid "send_song_error"
+msgstr "❌ Oops! Something went wrong. Audio file is not available."
+
+msgid "promo_caption"
+msgstr "<a href='https://t.me/{username}'>🎵 Discover More Music</a>"
+
+msgid "back_button"
+msgstr "⬅️ Back"

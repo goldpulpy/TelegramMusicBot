@@ -1,0 +1,79 @@
+# Russian translations for PROJECT.
+# Copyright (C) 2025 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2025-01-06 20:46+0300\n"
+"PO-Revision-Date: 2025-01-06 20:46+0300\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: ru\n"
+"Language-Team: ru <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.13.1\n"
+
+msgid "language_command"
+msgstr "🌎 Изменить язык"
+
+msgid "language_button"
+msgstr "🌎 Язык"
+
+msgid "menu"
+msgstr "⭐️ <b>Меню</b>"
+
+msgid "menu_command"
+msgstr "⭐️ Открыть меню"
+
+msgid "faq_button"
+msgstr "❓ FAQ"
+
+msgid "faq"
+msgstr "<b>❓ Часто задаваемые вопросы</b>\n\n"
+"<b>Как искать песни ❓</b>\n"
+"• Напишите название песни или имя исполнителя в чат.\n\n"
+"<b>Как вызвать меню ❓</b>\n"
+"• Отправьте мне команду /menu в чат.\n\n"
+"<b>Как сохранить на телефон ❓</b>\n"
+"• Выделите нужную песню и сохраните её на телефон.\n\n"
+"<b>Зачем нужна кнопка 🔽 в списке песен❓</b>\n"
+"• Позволяет получить все песни с текущей страницы.\n\n"
+"<b>Как изменить язык ❓</b>\n"
+"• Отправьте мне команду /language в чат или нажмите на кнопку «🌎 Язык» в меню."
+
+msgid "top_button"
+msgstr "🔥 Топ песен"
+
+msgid "top"
+msgstr "<b>🔥 Популярная музыка</b>"
+
+msgid "novelties_button"
+msgstr "🆕 Новинки"
+
+msgid "novelties"
+msgstr "<b>🆕 Новинки музыки</b>"
+
+msgid "searching"
+msgstr "🔍 Поиск: <b>{keyword}</b>"
+
+msgid "search_result"
+msgstr "🎧 <b>{keyword}</b>"
+
+msgid "song_sending"
+msgstr "🎧 Отправка песни..."
+
+msgid "send_song_error"
+msgstr "❌ Ой! Что-то пошло не так. Аудиофайл не доступен."
+
+msgid "promo_caption"
+msgstr "<a href='https://t.me/{username}'>🎵 Найди больше музыки</a>"
+
+msgid "back_button"
+msgstr "⬅️ Назад"
+
