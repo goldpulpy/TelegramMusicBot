@@ -22,20 +22,24 @@
 - 🛡️ Безопасное хранение данных в PostgreSQL
 - 📝 Лицензия: Apache License 2.0
 
+## 🎥 Демо (Demo)
+
+Демо бота можно посмотреть [здесь](https://t.me/mygoldmusicbot)
+
 ## 🚀 Быстрый старт (Quickstart)
 
 ### Предварительные условия (Requirements)
 
 - Docker и Docker Compose должны быть установлены
-- Telegram Bot Token ([BotFather](https://t.me/botfather))
+- Токен бота ([BotFather](https://t.me/botfather))
 
 ### Установка (Installation)
 
 1. Клонируйте репозиторий
 
    ```bash
-   git clone https://github.com/goldpulpy/telegram-music-bot.git
-   cd telegram-music-bot
+   git clone https://github.com/goldpulpy/TelegramMusicBot.git
+   cd TelegramMusicBot
    ```
 
 2. Скопируйте `.env.example` в `.env`:
@@ -46,8 +50,8 @@
 
    ```env
    # Bot Configuration
-   BOT_TOKEN=your_bot_token # Telegram bot token from BotFather
-   TIMEZONE=your_timezone # Пример: Europe/Moscow
+   BOT_TOKEN=your_bot_token # Токен бота от BotFather
+   TIMEZONE=UTC # Пример: Europe/Moscow
 
    # Database Configuration
    POSTGRES_USER=your_username # Пример: root
