@@ -1,6 +1,6 @@
 <div align="center">
-  <h1>🎵 Telegram Music Bot</h1>
-  <p>Powerful bot for searching and listening to music in Telegram</p>
+  <h1>🎵 Музыкальный телеграм бот</h1>
+  <p>Поиск и прослушивание музыки в Telegram</p>
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-17-blue?logo=postgresql)
@@ -11,67 +11,67 @@
 
 </div>
 
-## ✨ Features
+## ✨ Возможности
 
-- 🎵 Instant music search and playback
-- 🎧 High sound quality
-- 🌅 Audio with cover
-- 📱 Intuitive interface
-- 🌍 Multiple language support (English, Russian)
-- 🐳 Easy deployment via Docker
-- 🛡️ Secure data storage in PostgreSQL
-- 📝 License: Apache License 2.0
+- 🎵 Поиск и прослушивание музыки
+- 🎧 Высокое качество звука
+- 🌅 Аудио с обложкой
+- 📱 Интуитивный интерфейс
+- 🌍 Поддержка нескольких языков (английский, русский)
+- 🐳 Легкое развертывание через Docker
+- 🛡️ Безопасное хранение данных в PostgreSQL
+- 📝 Лицензия: Apache License 2.0
 
-## 🚀 Quick Start
+## 🚀 Быстрый старт
 
-### Prerequisites
+### Предварительные условия
 
-- Docker and Docker Compose installed
-- Telegram Bot Token ([Get it from BotFather](https://t.me/botfather))
+- Docker и Docker Compose установлены
+- Telegram Bot Token ([Получить его от BotFather](https://t.me/botfather))
 
-### Installation
+### Установка
 
-1. Clone the repository
+1. Клонируйте репозиторий
 
    ```bash
    git clone https://github.com/goldpulpy/telegram-music-bot.git
    cd telegram-music-bot
    ```
 
-2. Copy `.env.example` to `.env`:
+2. Скопируйте `.env.example` в `.env`:
    ```bash
    cp .env.example .env
    ```
-3. Configure your environment variables:
+3. Настройте переменные окружения:
 
    ```env
    # Bot Configuration
    BOT_TOKEN=your_bot_token # Telegram bot token from BotFather
-   TIMEZONE=your_timezone # Example: Europe/Moscow
+   TIMEZONE=your_timezone # Пример: Europe/Moscow
 
    # Database Configuration
-   POSTGRES_USER=your_username # Example: root
-   POSTGRES_PASSWORD=your_password # Example: root
-   POSTGRES_DB=your_database_name # Example: music_bot
+   POSTGRES_USER=your_username # Пример: root
+   POSTGRES_PASSWORD=your_password # Пример: root
+   POSTGRES_DB=your_database_name # Пример: music_bot
    ```
 
-### 🎮 Usage
+### 🎮 Использование
 
-**Start the bot:**
+**Запустите бот:**
 
 ```bash
 docker compose up -d
 ```
 
-**Stop the bot:**
+**Остановите бот:**
 
 ```bash
 docker compose down
 ```
 
-## 📊 Database Management
+## 📊 Управление базой данных
 
-Access Adminer at `http://your_server_ip:8080`
+Доступ к Adminer по адресу `http://your_server_ip:8080`
 
 | Setting  | Value         |
 | -------- | ------------- |
@@ -81,9 +81,9 @@ Access Adminer at `http://your_server_ip:8080`
 | Password | your_password |
 | Database | your_db_name  |
 
-## 📝 License
+## 📝 Лицензия
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
+Этот проект лицензирован под Apache License 2.0 - см. [LICENSE](LICENSE) для деталей.
 
 <div align="center">
   <p>Created with ❤️ by <a href="https://github.com/goldpulpy">goldpulpy</a></p>
