@@ -1,15 +1,18 @@
 """Data classes"""
-from dataclasses import dataclass
+import json
+import os
+from dataclasses import dataclass, field
 from bs4 import BeautifulSoup
+
+headers_path = os.path.join(os.path.dirname(__file__), "headers.json")
 
 
 @dataclass
 class ServiceConfig:
     """Configuration for music service."""
     timeout: int = 30
-    user_agent: str = (
-        "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
-        "(KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+    headers: dict = field(
+        default_factory=lambda: json.load(open(headers_path))
     )
 
 

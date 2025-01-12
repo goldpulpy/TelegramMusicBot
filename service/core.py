@@ -35,7 +35,7 @@ class MusicService:
         """Initialize HTTP session."""
         if self._session is None:
             self._session = aiohttp.ClientSession(
-                headers={"User-Agent": self._config.user_agent}
+                headers=self._config.headers
             )
 
     async def disconnect(self) -> None:
