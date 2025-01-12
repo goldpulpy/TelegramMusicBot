@@ -22,7 +22,7 @@
 - 🛡️ Безопасное хранение данных в PostgreSQL
 - 📝 Лицензия: Apache License 2.0
 
-## 🚀 Быстрый старт (Quick start)
+## 🚀 Быстрый старт (Quickstart)
 
 ### Предварительные условия (Requirements)
 
