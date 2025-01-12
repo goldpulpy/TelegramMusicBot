@@ -45,10 +45,6 @@ class CRUD:
             try:
                 await session.commit()
                 await session.refresh(instance)
-                logger.debug(
-                    "%s created with ID: %s", self.model.__name__,
-                    getattr(instance, 'id', 'unknown')
-                )
                 return instance
             except SQLAlchemyError as e:
                 await session.rollback()
@@ -64,17 +60,6 @@ class CRUD:
                 select(self.model).filter_by(**kwargs)
             )
             instance = query.scalar_one_or_none()
-
-            if instance:
-                logger.debug(
-                    "%s retrieved with filters: %s", self.model.__name__,
-                    kwargs
-                )
-            else:
-                logger.debug(
-                    "%s not found with filters: %s", self.model.__name__,
-                    kwargs
-                )
             return instance
 
     async def update(self, instance: T, **kwargs) -> T:
@@ -86,10 +71,6 @@ class CRUD:
             try:
                 await session.commit()
                 await session.refresh(instance)
-                logger.debug(
-                    "%s updated with ID: %s", self.model.__name__,
-                    getattr(instance, 'id', 'unknown')
-                )
                 return instance
             except SQLAlchemyError as e:
                 await session.rollback()
@@ -105,10 +86,6 @@ class CRUD:
             try:
                 await session.delete(instance)
                 await session.commit()
-                logger.debug(
-                    "%s deleted with ID: %s", self.model.__name__,
-                    getattr(instance, 'id', 'unknown')
-                )
                 return True
             except SQLAlchemyError as e:
                 await session.rollback()
