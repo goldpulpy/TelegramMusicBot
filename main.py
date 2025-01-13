@@ -2,14 +2,16 @@
 """Entry point of the bot application."""
 import logging
 import asyncio
+
 from aiogram import Bot, Dispatcher
 from aiogram.client.bot import DefaultBotProperties
 from aiogram.utils.token import TokenValidationError
 from aiogram.utils.i18n import I18n
 from aiogram.fsm.storage.memory import MemoryStorage
-from app import handlers, middlewares, app_config
-from database.engine import init_db
 
+from bot import handlers, middlewares
+from database.engine import init_db
+from configs import bot_config
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -20,13 +22,13 @@ async def create_bot() -> Bot:
     Create and return a Bot instance."""
     try:
         bot = Bot(
-            token=app_config.bot_token,
+            token=bot_config.token,
             default=DefaultBotProperties(parse_mode='HTML')
         )
         logger.info('Successfully created bot instance.')
         return bot
     except TokenValidationError as e:
-        logger.error('Invalid token provided: %s', app_config.bot_token)
+        logger.error('Invalid token provided: %s', bot_config.token)
         raise e
     except Exception as e:
         logger.error('Failed to create bot instance: %s', str(e))

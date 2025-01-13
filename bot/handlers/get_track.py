@@ -4,7 +4,7 @@ from aiogram import types, Router, F, Bot
 from aiogram.types import BufferedInputFile
 from aiogram.utils.i18n import gettext
 from service import Music, Track
-from app.utils import load_tracks_from_db
+from bot.utils import load_tracks_from_db
 
 
 logger = logging.getLogger(__name__)

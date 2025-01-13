@@ -4,8 +4,8 @@ from aiogram import types, Router, Bot, F
 from aiogram.utils import i18n
 from aiogram.utils.i18n import gettext
 from aiogram.filters import Command
-from app.filters import LanguageFilter
-from app.keyboards import inline, command
+from bot.filters import LanguageFilter
+from bot.keyboards import inline, command
 from database.crud import CRUD
 from database.models import User
 from .menu import menu_callback_handler

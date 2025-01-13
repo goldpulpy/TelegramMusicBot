@@ -2,8 +2,8 @@
 import logging
 from aiogram import types, Router, F
 from service.data import Track
-from app.keyboards import inline
-from app.utils import load_tracks_from_db
+from bot.keyboards import inline
+from bot.utils import load_tracks_from_db
 
 
 logger = logging.getLogger(__name__)

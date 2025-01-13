@@ -5,7 +5,7 @@ from aiogram.utils.i18n import gettext
 from service import Music, Track
 from database.crud import CRUD
 from database.models import SearchHistory, User
-from app.keyboards import inline
+from bot.keyboards import inline
 
 
 logger = logging.getLogger(__name__)

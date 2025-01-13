@@ -1,4 +1,4 @@
-"""Auth middleware module for the app."""
+"""Auth middleware module for the bot."""
 import logging
 from datetime import datetime
 from typing import Any, Awaitable, Callable, Dict

@@ -3,7 +3,7 @@ import logging
 from aiogram import types, Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.utils.i18n import gettext
-from app.keyboards import inline
+from bot.keyboards import inline
 
 
 logger = logging.getLogger(__name__)
