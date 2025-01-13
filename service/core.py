@@ -5,7 +5,7 @@ from typing import Optional
 import aiohttp
 from bs4 import BeautifulSoup
 
-from .data import Song, ServiceConfig
+from .data import Track, ServiceConfig
 from .exceptions import MusicServiceError
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 class Music:
     """Service for searching and downloading music."""
     BASE_URL = "https://mp3wr.com"
-    SONG_DOWNLOAD_URL = "https://cdn.mp3wr.com"
+    TRACK_DOWNLOAD_URL = "https://cdn.mp3wr.com"
 
     def __init__(self, config: Optional[ServiceConfig] = None) -> None:
         """Initialize music service with optional configuration."""
@@ -43,7 +43,7 @@ class Music:
             await self._session.close()
             self._session = None
 
-    async def get_songs_list(self, keyword: str) -> list[Song]:
+    async def search(self, keyword: str) -> list[Track]:
         """Search for music by keyword."""
         if not self._session:
             await self.connect()
@@ -51,50 +51,50 @@ class Music:
         url = f"{self.BASE_URL}/search/{keyword}"
         logger.info("Searching music with keyword: %s", keyword)
 
-        return await self._parse_songs(url, is_search=True)
+        return await self._parse_tracks(url, is_search=True)
 
-    async def get_top_songs(self) -> list[Song]:
-        """Get top songs."""
+    async def get_top_hits(self) -> list[Track]:
+        """Get top tracks."""
         url = f"{self.BASE_URL}/besthit"
-        return await self._parse_songs(url)
+        return await self._parse_tracks(url)
 
-    async def get_novelties(self) -> list[Song]:
-        """Get novelties."""
+    async def get_new_hits(self) -> list[Track]:
+        """Get new hits."""
         url = f"{self.BASE_URL}/newhit"
-        return await self._parse_songs(url)
+        return await self._parse_tracks(url)
 
-    async def _parse_songs(
+    async def _parse_tracks(
         self, url: str, is_search: bool = False
-    ) -> list[Song]:
-        """Parse songs from the given URL."""
+    ) -> list[Track]:
+        """Parse tracks from the given URL."""
         try:
             async with self._session.get(
                 url, timeout=self._config.timeout
             ) as response:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")
-                songs = [
-                    Song.from_element(song_data, index, is_search)
-                    for index, song_data in enumerate(
+                tracks = [
+                    Track.from_element(track_data, index, is_search)
+                    for index, track_data in enumerate(
                         soup.find_all("item") if is_search
                         else soup.find_all("li", class_="sarki-liste")
                     )
                 ]
 
-            logger.info("Found %d songs", len(songs))
-            return songs
+            logger.info("Found %d tracks", len(tracks))
+            return tracks
 
         except (aiohttp.ClientError, TimeoutError) as e:
             raise MusicServiceError(f"Failed to search music: {str(e)}") from e
 
     async def _download_data(
-        self, url: str, resource_type: str, song_name: str
+        self, url: str, resource_type: str, track_name: str
     ) -> bytes:
         """Generic method for downloading data."""
         if not self._session:
             await self.connect()
 
-        logger.info("Downloading %s for song: %s", resource_type, song_name)
+        logger.info("Downloading %s for track: %s", resource_type, track_name)
 
         try:
             async with self._session.get(
@@ -108,16 +108,16 @@ class Music:
             raise MusicServiceError(
                 f"Failed to download {resource_type}: {str(e)}") from e
 
-    async def get_song_bytes(self, song: Song) -> bytes:
+    async def get_audio_bytes(self, track: Track) -> bytes:
         """Download music file."""
-        url = song.audio_url
+        url = track.audio_url
         if url.startswith("/"):
-            url = f"{self.BASE_URL}{song.audio_url}"
-        return await self._download_data(url, "song", song.name)
+            url = f"{self.BASE_URL}{track.audio_url}"
+        return await self._download_data(url, "audio", track.name)
 
-    async def get_thumbnail_bytes(self, song: Song) -> bytes:
+    async def get_thumbnail_bytes(self, track: Track) -> bytes:
         """Download thumbnail image."""
-        url = song.thumbnail_url
+        url = track.thumbnail_url
         if url.startswith("/"):
-            url = f"{self.BASE_URL}{song.thumbnail_url}"
-        return await self._download_data(url, "thumbnail", song.name)
+            url = f"{self.BASE_URL}{track.thumbnail_url}"
+        return await self._download_data(url, "thumbnail", track.name)

@@ -47,16 +47,16 @@ msgstr "<b>❓ Часто задаваемые вопросы</b>\n\n"
 "<b>Как изменить язык ❓</b>\n"
 "• Отправьте мне команду /language в чат или нажмите на кнопку «🌎 Язык» в меню."
 
-msgid "top_button"
+msgid "top_hits_button"
 msgstr "🔥 Топ песен"
 
-msgid "top"
+msgid "top_hits"
 msgstr "<b>🔥 Популярная музыка</b>"
 
-msgid "novelties_button"
+msgid "new_hits_button"
 msgstr "🆕 Новинки"
 
-msgid "novelties"
+msgid "new_hits"
 msgstr "<b>🆕 Новинки музыки</b>"
 
 msgid "searching"
@@ -65,10 +65,10 @@ msgstr "🔍 Поиск: <b>{keyword}</b>"
 msgid "search_result"
 msgstr "🎧 <b>{keyword}</b>"
 
-msgid "song_sending"
-msgstr "🎧 Отправка песни..."
+msgid "track_sending"
+msgstr "🎧 Отправка трека..."
 
-msgid "send_song_error"
+msgid "send_track_error"
 msgstr "❌ Ой! Что-то пошло не так. Аудиофайл не доступен."
 
 msgid "promo_caption"

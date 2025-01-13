@@ -1,5 +1,5 @@
 """Service module."""
 from .core import Music
-from .data import Song
+from .data import Track
 
-__all__ = ['Music', 'Song']
+__all__ = ['Music', 'Track']

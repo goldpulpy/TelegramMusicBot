@@ -1,5 +1,6 @@
 """User database model."""
-from sqlalchemy import Column, String, BigInteger, DateTime, func, Integer
+from datetime import datetime
+from sqlalchemy import Column, String, BigInteger, DateTime, Integer
 from ..engine import Base
 
 
@@ -14,5 +15,5 @@ class User(Base):
     language_code = Column(String, default=None)
     state = Column(String, default=None)
     search_queries = Column(Integer, default=0)
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now())
+    created_at = Column(DateTime, default=datetime.now())
+    updated_at = Column(DateTime, default=datetime.now())
