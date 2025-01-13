@@ -12,7 +12,6 @@ from .engine import async_session_factory
 
 T = TypeVar('T')
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 

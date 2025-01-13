@@ -3,12 +3,10 @@ import logging
 from aiogram import types, Router, F, Bot
 from aiogram.types import BufferedInputFile
 from aiogram.utils.i18n import gettext
-from service.core import MusicService
-from service.data import Song
+from service import Music, Song
 from app.utils import load_songs_from_db
 
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -21,7 +19,7 @@ async def send_song(
     try:
         await bot.send_chat_action(callback.message.chat.id, "upload_document")
 
-        async with MusicService() as service:
+        async with Music() as service:
             song_bytes = await service.get_song_bytes(song)
             thumbnail_bytes = await service.get_thumbnail_bytes(song)
 
@@ -39,7 +37,7 @@ async def send_song(
         )
     except Exception as e:
         await callback.message.answer(gettext("send_song_error"))
-        logger.error(f"Failed to send song: {e}")
+        logger.error("Failed to send song: %s", e)
 
 
 async def get_song_handler(callback: types.CallbackQuery, bot: Bot) -> None:
@@ -52,7 +50,7 @@ async def get_song_handler(callback: types.CallbackQuery, bot: Bot) -> None:
         await send_song(callback, bot, song)
 
     except Exception as e:
-        logger.error(f"Failed get song handler: {e}")
+        logger.error("Failed get song handler: %s", e)
 
 
 async def get_all_from_page_handler(
@@ -68,7 +66,7 @@ async def get_all_from_page_handler(
             await send_song(callback, bot, song)
 
     except Exception as e:
-        logger.error(f"Failed get all from page handler: {e}")
+        logger.error("Failed get all from page handler: %s", e)
 
 
 def register(router: Router) -> None:

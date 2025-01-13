@@ -8,11 +8,10 @@ from bs4 import BeautifulSoup
 from .data import Song, ServiceConfig
 from .exceptions import MusicServiceError
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class MusicService:
+class Music:
     """Service for searching and downloading music."""
     BASE_URL = "https://mp3wr.com"
     SONG_DOWNLOAD_URL = "https://cdn.mp3wr.com"
@@ -22,7 +21,7 @@ class MusicService:
         self._config = config or ServiceConfig()
         self._session: Optional[aiohttp.ClientSession] = None
 
-    async def __aenter__(self) -> 'MusicService':
+    async def __aenter__(self) -> 'Music':
         """Context manager entry point."""
         await self.connect()
         return self

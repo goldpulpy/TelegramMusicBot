@@ -2,14 +2,12 @@
 import logging
 from aiogram import types, Router, F
 from aiogram.utils.i18n import gettext
-from service.core import MusicService
-from service.data import Song
+from service import Music, Song
 from database.crud import CRUD
-from database.models.search_history import SearchHistory
-from database.models.user import User
+from database.models import SearchHistory, User
 from app.keyboards import inline
 
-logging.basicConfig(level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 
@@ -36,7 +34,7 @@ async def search_handler(message: types.Message, user: User) -> None:
         search_message = await message.answer(
             gettext("searching").format(keyword=keyword)
         )
-        async with MusicService() as service:
+        async with Music() as service:
             songs = await service.get_songs_list(keyword)
 
         search = await update_search(user, keyword, songs)
@@ -47,12 +45,12 @@ async def search_handler(message: types.Message, user: User) -> None:
             )
         )
     except Exception as e:
-        logger.error(f"Failed to send message: {e}")
+        logger.error("Failed to send message: %s", e)
 
 
 async def get_song_list(list_type: str) -> list[Song]:
     """Gets the song list."""
-    async with MusicService() as service:
+    async with Music() as service:
         map_list_type = {
             "top": service.get_top_songs,
             "novelties": service.get_novelties

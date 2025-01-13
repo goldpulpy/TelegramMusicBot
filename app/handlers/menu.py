@@ -1,11 +1,11 @@
-"""Start for the bot."""
+"""Menu handler for the bot."""
 import logging
 from aiogram import types, Router, F
 from aiogram.filters import CommandStart, Command
 from aiogram.utils.i18n import gettext
 from app.keyboards import inline
 
-logging.basicConfig(level=logging.INFO)
+
 logger = logging.getLogger(__name__)
 
 
@@ -17,7 +17,7 @@ async def menu_handler(message: types.Message) -> None:
             reply_markup=inline.get_menu_keyboard(gettext)
         )
     except Exception as e:
-        logger.error(f"Failed to send message: {e}")
+        logger.error("Failed to send message: %s", e)
 
 
 async def menu_callback_handler(callback: types.CallbackQuery) -> None:

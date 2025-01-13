@@ -6,7 +6,6 @@ from sqlalchemy.orm import sessionmaker
 from app import app_config
 
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 engine = create_async_engine(app_config.db_url, future=True)

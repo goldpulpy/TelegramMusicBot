@@ -7,11 +7,10 @@ from aiogram.filters import Command
 from app.filters import LanguageFilter
 from app.keyboards import inline, command
 from database.crud import CRUD
-from database.models.user import User
+from database.models import User
 from .menu import menu_callback_handler
 
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -23,7 +22,7 @@ async def language_handler(message: types.Message) -> None:
             reply_markup=inline.language_keyboard
         )
     except Exception as e:
-        logger.error(f"Failed to send message: {e}")
+        logger.error("Failed to send message: %s", e)
 
 
 async def language_callback_handler(callback: types.CallbackQuery) -> None:
@@ -34,7 +33,7 @@ async def language_callback_handler(callback: types.CallbackQuery) -> None:
             reply_markup=inline.language_keyboard
         )
     except Exception as e:
-        logger.error(f"Failed to send message: {e}")
+        logger.error("Failed to send message: %s", e)
 
 
 async def language_set_handler(
@@ -53,7 +52,7 @@ async def language_set_handler(
         await bot.set_my_commands(command.get_commands(gettext))
         await menu_callback_handler(callback)
     except Exception as e:
-        logger.error(f"Failed to send message: {e}")
+        logger.error("Failed to send message: %s", e)
 
 
 def register(router: Router) -> None:

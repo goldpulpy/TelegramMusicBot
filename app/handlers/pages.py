@@ -6,7 +6,6 @@ from app.keyboards import inline
 from app.utils import load_songs_from_db
 
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -22,7 +21,7 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
             )
         )
     except Exception as e:
-        logger.error(f"Failed to send message: {e}")
+        logger.error("Failed to send message: %s", e)
 
 
 def register(router: Router) -> None:

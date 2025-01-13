@@ -50,7 +50,7 @@
 
    ```env
    # Bot Configuration
-   BOT_TOKEN=your_bot_token # Токен бота от BotFather
+   BOT_TOKEN=your_bot_token # Токен бота
    TIMEZONE=UTC # Пример: Europe/Moscow
 
    # Database Configuration
