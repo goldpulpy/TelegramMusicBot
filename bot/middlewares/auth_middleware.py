@@ -68,7 +68,6 @@ class AuthMiddleware(BaseMiddleware):
             db_user = await user_crud.create(**user_data)
             logger.info("User %s registered in the database.", user.id)
 
-        # Update user data if it exists
         else:
             user_data['updated_at'] = datetime.now()
             db_user = await user_crud.update(db_user, **user_data)

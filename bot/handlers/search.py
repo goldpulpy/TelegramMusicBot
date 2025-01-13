@@ -30,7 +30,11 @@ async def update_search(
 async def search_handler(message: types.Message, user: User) -> None:
     """Handles the search."""
     try:
-        keyword = message.text
+        keyword = message.text.strip()
+        if not keyword or len(keyword) > 100:
+            await message.answer(gettext("search_query_error"))
+            return
+    
         search_message = await message.answer(
             gettext("searching").format(keyword=keyword)
         )

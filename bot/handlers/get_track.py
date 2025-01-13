@@ -59,10 +59,10 @@ async def get_all_from_page_handler(
     """Get all tracks from page handler."""
     try:
         _, _, search_id, start_indx, end_indx = callback.data.split(":")
-        tracks: list[Track] = await load_tracks_from_db(search_id)
-        tracks = tracks[int(start_indx):int(end_indx)]
+        all_tracks: list[Track] = await load_tracks_from_db(search_id)
+        page_tracks = all_tracks[int(start_indx):int(end_indx)]
         await callback.answer(gettext("track_sending"))
-        for track in tracks:
+        for track in page_tracks:
             await send_track(callback, bot, track)
 
     except Exception as e:

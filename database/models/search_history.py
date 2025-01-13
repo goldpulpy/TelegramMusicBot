@@ -1,8 +1,7 @@
 """Search history database model."""
-from datetime import datetime
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy import (
-    Column, String, DateTime, Integer, BigInteger, ForeignKey
+    Column, String, DateTime, Integer, BigInteger, ForeignKey, func
 )
 from ..engine import Base
 
@@ -16,4 +15,4 @@ class SearchHistory(Base):
     user_id = Column(BigInteger, ForeignKey('users.id'))
     keyword = Column(String, default=None)
     tracks = Column(JSONB, default=[])
-    created_at = Column(DateTime, default=datetime.now())
+    created_at = Column(DateTime, default=func.now())

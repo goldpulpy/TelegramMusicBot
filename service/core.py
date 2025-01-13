@@ -1,5 +1,6 @@
 """Music service core module for downloading and searching music."""
 import logging
+import urllib.parse
 from typing import Optional
 
 import aiohttp
@@ -48,19 +49,19 @@ class Music:
         if not self._session:
             await self.connect()
 
-        url = f"{self.BASE_URL}/search/{keyword}"
+        url = urllib.parse.urljoin(self.BASE_URL, f"search/{keyword}")
         logger.info("Searching music with keyword: %s", keyword)
 
         return await self._parse_tracks(url, is_search=True)
 
     async def get_top_hits(self) -> list[Track]:
         """Get top tracks."""
-        url = f"{self.BASE_URL}/besthit"
+        url = urllib.parse.urljoin(self.BASE_URL, "besthit")
         return await self._parse_tracks(url)
 
     async def get_new_hits(self) -> list[Track]:
         """Get new hits."""
-        url = f"{self.BASE_URL}/newhit"
+        url = urllib.parse.urljoin(self.BASE_URL, "newhit")
         return await self._parse_tracks(url)
 
     async def _parse_tracks(
@@ -112,12 +113,12 @@ class Music:
         """Download music file."""
         url = track.audio_url
         if url.startswith("/"):
-            url = f"{self.BASE_URL}{track.audio_url}"
+            url = urllib.parse.urljoin(self.BASE_URL, track.audio_url)
         return await self._download_data(url, "audio", track.name)
 
     async def get_thumbnail_bytes(self, track: Track) -> bytes:
         """Download thumbnail image."""
         url = track.thumbnail_url
         if url.startswith("/"):
-            url = f"{self.BASE_URL}{track.thumbnail_url}"
+            url = urllib.parse.urljoin(self.BASE_URL, track.thumbnail_url)
         return await self._download_data(url, "thumbnail", track.name)

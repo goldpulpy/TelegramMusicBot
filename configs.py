@@ -20,10 +20,14 @@ class DBConfig:
     user: str = os.getenv('POSTGRES_USER')
     password: str = os.getenv('POSTGRES_PASSWORD')
     db: str = os.getenv('POSTGRES_DB')
-    url: str = (
-        "postgresql+asyncpg://"
-        f"{user}:{password}@{host}:{port}/{db}"
-    )
+
+    @property
+    def url(self) -> str:
+        """Construct and return the database URL using instance attributes."""
+        return (
+            "postgresql+asyncpg://"
+            f"{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+        )
 
 
 bot_config = BotConfig()

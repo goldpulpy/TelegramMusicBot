@@ -68,6 +68,9 @@ msgstr "🔍 Searching: <b>{keyword}</b>"
 msgid "search_result"
 msgstr "🎧 <b>{keyword}</b>:"
 
+msgid "search_query_error"
+msgstr "❌ Incorrect search query."
+
 msgid "track_sending"
 msgstr "🎧 Sending track..."
 

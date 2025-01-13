@@ -33,6 +33,10 @@ class CRUD:
         session = self.session_factory()
         try:
             yield session
+        except Exception as e:
+            await session.rollback()
+            logger.error("Failed to get session: %s", e)
+            raise
         finally:
             await session.close()
 

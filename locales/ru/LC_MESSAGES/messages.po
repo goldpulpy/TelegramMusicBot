@@ -72,6 +72,9 @@ msgstr "🎧 <b>{keyword}</b>"
 msgid "track_sending"
 msgstr "🎧 Отправка трека..."
 
+msgid "search_query_error"
+msgstr "❌ Некорректный поисковый запрос."
+
 msgid "send_track_error"
 msgstr "❌ Ой! Что-то пошло не так. Аудиофайл не доступен."
 
@@ -80,4 +83,3 @@ msgstr "<a href='https://t.me/{username}'>🎵 Найди больше музы�
 
 msgid "back_button"
 msgstr "⬅️ Назад"
-
