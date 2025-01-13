@@ -9,6 +9,7 @@ from bot.filters import LanguageFilter
 from bot.keyboards import inline, command
 from database.crud import CRUD
 from database.models import User
+from locales import support_languages
 from .menu import menu_handler
 
 
@@ -16,11 +17,16 @@ logger = logging.getLogger(__name__)
 
 
 async def language_handler(
-    event: Union[types.Message, types.CallbackQuery]
+    event: Union[types.Message, types.CallbackQuery],
+    user: User,
 ) -> None:
     """Language handler."""
     try:
-        text = "🌎 Choose language:"
+        text = (
+            gettext("language_choose")
+            if support_languages.is_supported(user.language_code)
+            else "🌎 Choose language:"
+        )
         keyboard = inline.language_keyboard
 
         if isinstance(event, types.CallbackQuery):

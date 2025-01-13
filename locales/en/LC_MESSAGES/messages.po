@@ -18,6 +18,10 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.13.1\n"
 
+
+msgid "language_choose"
+msgstr "🌎 Choose language:"
+
 msgid "language_command"
 msgstr "🌎 Change language"
 
