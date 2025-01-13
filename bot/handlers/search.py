@@ -30,7 +30,7 @@ async def update_search(
 async def search_handler(message: types.Message, user: User) -> None:
     """Handles the search."""
     try:
-        keyword = message.text.replace(":", "").strip()
+        keyword = message.text
         search_message = await message.answer(
             gettext("searching").format(keyword=keyword)
         )
