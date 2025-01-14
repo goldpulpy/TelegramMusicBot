@@ -4,7 +4,7 @@ from aiogram import types, Router, F, Bot
 from aiogram.utils.i18n import gettext
 from bot.keyboards import inline
 from bot.filters import NotSubbedFilter
-from database.models import SubscriptionRequired, User
+from database.models import RequiredSubscriptions, User
 from database.crud import CRUD
 
 logger = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ async def sub_required_handler(
 ) -> None:
     """Subscription required handler."""
     try:
-        required_chats = await CRUD(SubscriptionRequired).get_all()
+        required_chats = await CRUD(RequiredSubscriptions).get_all()
         text = gettext("not_subscribed")
         keyboard = inline.get_subscribe_keyboard(gettext, required_chats)
 

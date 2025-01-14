@@ -4,7 +4,7 @@ from aiogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 from service.data import Track
 from locales import support_languages
-from database.models import SubscriptionRequired
+from database.models import RequiredSubscriptions
 
 
 def get_keyboard_of_tracks(
@@ -105,7 +105,7 @@ def get_menu_keyboard(gettext: Callable[[str], str]) -> InlineKeyboardMarkup:
 
 def get_subscribe_keyboard(
     gettext: Callable[[str], str],
-    sub_required: list[SubscriptionRequired],
+    sub_required: list[RequiredSubscriptions],
 ) -> InlineKeyboardMarkup:
     """Get subscribe keyboard."""
     chats = [

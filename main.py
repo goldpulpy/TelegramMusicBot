@@ -13,7 +13,8 @@ from database.engine import init_db
 from configs import bot_config
 
 logging.basicConfig(
-    level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s'
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s:%(name)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
@@ -37,9 +38,7 @@ async def create_bot() -> Bot:
 
 
 async def main() -> None:
-    """
-    The entry point of the bot application.
-    """
+    """The entry point of the bot application."""
     bot = await create_bot()
 
     storage = MemoryStorage()

@@ -1,11 +1,13 @@
 """Check if user is subbed to the channel."""
-
+import logging
 from aiogram import types
 from aiogram.filters import Filter
 from aiogram import Bot
 from aiogram.enums import ChatMemberStatus
-from database.models import SubscriptionRequired, User
+from database.models import RequiredSubscriptions, User
 from database.crud import CRUD
+
+logger = logging.getLogger(__name__)
 
 
 class NotSubbedFilter(Filter):
@@ -27,7 +29,7 @@ class NotSubbedFilter(Filter):
         Returns True if user is NOT subscribed to ANY required channel.
         Returns False if user is subscribed to ALL required channels.
         """
-        chats = await CRUD(SubscriptionRequired).get_all()
+        chats = await CRUD(RequiredSubscriptions).get_all()
 
         if not chats:
             return False
@@ -38,7 +40,7 @@ class NotSubbedFilter(Filter):
         return False
 
     async def _not_subscribe(
-        self, sub: SubscriptionRequired, user: User, bot: Bot
+        self, sub: RequiredSubscriptions, user: User, bot: Bot
     ) -> bool:
         """
         Check if the user is subscribed to the channel.
@@ -47,7 +49,8 @@ class NotSubbedFilter(Filter):
         """
         try:
             chat = await bot.get_chat(sub.chat_id)
-        except Exception:
+        except Exception as e:
+            logger.error(f"Failed to get chat {sub.chat_id}: {e}")
             return False
 
         try:

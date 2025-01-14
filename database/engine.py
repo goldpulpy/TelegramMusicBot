@@ -16,8 +16,6 @@ async_session_factory = sessionmaker(
     class_=AsyncSession,
     expire_on_commit=False,
     autoflush=False,
-    pool_timeout=30,
-    pool_recycle=1800
 )
 
 
