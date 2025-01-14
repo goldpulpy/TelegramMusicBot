@@ -1,16 +1,15 @@
-"""Auth middleware module for the app."""
+"""Auth middleware module for the bot."""
 import logging
 from typing import Any, Awaitable, Callable, Dict
 
-from sqlalchemy import func
 from aiogram import BaseMiddleware
 from aiogram.types import Update
+from sqlalchemy import func
 
 from database.crud import CRUD
-from database.models.user import User
+from database.models import User
 
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -69,7 +68,6 @@ class AuthMiddleware(BaseMiddleware):
             db_user = await user_crud.create(**user_data)
             logger.info("User %s registered in the database.", user.id)
 
-        # Update user data if it exists
         else:
             user_data['updated_at'] = func.now()
             db_user = await user_crud.update(db_user, **user_data)

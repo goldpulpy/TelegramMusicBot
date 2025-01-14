@@ -1,4 +1,4 @@
-"""Middlewares for the app."""
+"""Middlewares for the bot."""
 from aiogram import Dispatcher
 from aiogram.utils.i18n import I18n
 from .auth_middleware import AuthMiddleware

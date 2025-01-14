@@ -2,7 +2,7 @@
 
 from aiogram import types
 from aiogram.filters import Filter
-from database.models.user import User
+from database.models import User
 from locales import support_languages
 
 

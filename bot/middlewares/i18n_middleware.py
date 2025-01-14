@@ -1,7 +1,7 @@
 """Custom i18n middleware (language selection)."""
 from aiogram.types import Message
 from aiogram.utils.i18n.middleware import I18nMiddleware as BaseI18nMiddleware
-from database.models.user import User
+from database.models import User
 
 
 class I18nMiddleware(BaseI18nMiddleware):

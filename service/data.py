@@ -17,8 +17,8 @@ class ServiceConfig:
 
 
 @dataclass
-class Song:
-    """Song data class"""
+class Track:
+    """Track data class"""
 
     index: int
     name: str
@@ -33,8 +33,8 @@ class Song:
         element: BeautifulSoup,
         index: int,
         is_search: bool = False,
-    ) -> "Song":
-        """Create Song from BeautifulSoup element"""
+    ) -> "Track":
+        """Create Track from BeautifulSoup element"""
         full_name = element.find(class_="artist_name").text.strip()
         performer, title = full_name.split(" - ", 1)
         audio_url = element.find(class_="right").get("data-id")

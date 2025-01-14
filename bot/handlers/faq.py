@@ -2,9 +2,8 @@
 import logging
 from aiogram import types, Router, F
 from aiogram.utils.i18n import gettext
-from app.keyboards import inline
+from bot.keyboards import inline
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
@@ -16,7 +15,7 @@ async def faq_handler(callback: types.CallbackQuery) -> None:
             reply_markup=inline.get_back_keyboard(gettext, "menu")
         )
     except Exception as e:
-        logger.error(f"Failed to send message: {e}")
+        logger.error("Failed to send message: %s", e)
 
 
 def register(router: Router) -> None:

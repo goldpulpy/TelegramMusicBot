@@ -1,5 +1,5 @@
 """User database model."""
-from sqlalchemy import Column, String, BigInteger, DateTime, func, Integer
+from sqlalchemy import Column, String, BigInteger, DateTime, Integer, func
 from ..engine import Base
 
 
