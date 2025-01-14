@@ -1,9 +1,10 @@
 """Configurations for the app."""
 import os
+import time
 from dataclasses import dataclass
 
-
 os.environ['TZ'] = os.getenv('TIMEZONE', 'UTC')
+time.tzset()
 
 
 @dataclass

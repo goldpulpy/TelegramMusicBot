@@ -92,6 +92,8 @@ class Music:
         self, url: str, resource_type: str, track_name: str
     ) -> bytes:
         """Generic method for downloading data."""
+        MAX_SIZE = 50 * 1024 * 1024  # 50MB
+
         if not self._session:
             await self.connect()
 
@@ -103,11 +105,18 @@ class Music:
                 timeout=self._config.timeout
             ) as response:
                 response.raise_for_status()
-                return await response.read()
+                content_length = response.content_length
 
-        except (aiohttp.ClientError, TimeoutError) as e:
+                if content_length and content_length > MAX_SIZE:
+                    raise MusicServiceError(
+                        f"File too large: {content_length} bytes"
+                    )
+
+                return await response.read()
+        except Exception as e:
             raise MusicServiceError(
-                f"Failed to download {resource_type}: {str(e)}") from e
+                f"Failed to download {resource_type}: {str(e)}"
+            ) from e
 
     async def get_audio_bytes(self, track: Track) -> bytes:
         """Download music file."""

@@ -85,7 +85,7 @@ msgid "back_button"
 msgstr "⬅️ Назад"
 
 msgid "not_subscribed"
-msgstr "❗️ Вы не подписаны на каналы, необходимые для использования бота."
+msgstr "❗️ Для использования бота, пожалуйста, подпишитесь на каналы."
 
 msgid "sub_check_button"
 msgstr "✅ Я подписан"

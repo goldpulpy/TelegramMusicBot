@@ -1,4 +1,3 @@
-
 """Entry point of the bot application."""
 import logging
 import asyncio

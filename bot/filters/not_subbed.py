@@ -24,14 +24,20 @@ class NotSubbedFilter(Filter):
     ) -> bool:
         """
         Check if the user is not subscribed to any required channels.
+        Returns True if user is NOT subscribed to ANY required channel.
+        Returns False if user is subscribed to ALL required channels.
         """
         chats = await CRUD(SubscriptionRequired).get_all()
+
+        if not chats:
+            return False
+
         for chat in chats:
-            if await self._check_subscription(chat, user, bot):
+            if await self._not_subscribe(chat, user, bot):
                 return True
         return False
 
-    async def _check_subscription(
+    async def _not_subscribe(
         self, sub: SubscriptionRequired, user: User, bot: Bot
     ) -> bool:
         """
