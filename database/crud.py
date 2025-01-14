@@ -65,6 +65,12 @@ class CRUD:
             instance = query.scalar_one_or_none()
             return instance
 
+    async def get_all(self) -> list[T]:
+        """Get all records."""
+        async with self.get_session() as session:
+            query = await session.execute(select(self.model))
+            return query.scalars().all()
+
     async def update(self, instance: T, **kwargs) -> T:
         """Update a record's information."""
         async with self.get_session() as session:

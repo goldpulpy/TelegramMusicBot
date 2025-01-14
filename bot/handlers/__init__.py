@@ -6,7 +6,8 @@ from . import (
     menu,
     faq,
     search,
-    pages
+    pages,
+    subscribe
 )
 
 
@@ -18,6 +19,7 @@ def setup(dp: Dispatcher) -> None:
     language.register(router)
     menu.register(router)
     faq.register(router)
+    subscribe.register(router)
     search.register(router)
     pages.register(router)
     get_track.register(router)

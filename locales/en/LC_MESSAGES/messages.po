@@ -82,3 +82,9 @@ msgstr "<a href='https://t.me/{username}'>🎵 Discover More Music</a>"
 
 msgid "back_button"
 msgstr "⬅️ Back"
+
+msgid "not_subscribed"
+msgstr "❗️ You are not subscribed to the required channels."
+
+msgid "sub_check_button"
+msgstr "✅ I'm subscribed"
