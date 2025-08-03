@@ -10,6 +10,9 @@ from database.crud import CRUD
 from database.models import SearchHistory, User
 from service import Music, Track
 
+# Constants
+MAX_KEYWORD_LENGTH = 100
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,7 +37,7 @@ async def search_handler(message: types.Message, user: User) -> None:
     """Handle the search."""
     try:
         keyword = message.text.strip()
-        if not keyword or len(keyword) > 100:
+        if not keyword or len(keyword) > MAX_KEYWORD_LENGTH:
             await message.answer(gettext("search_query_error"))
             return
 

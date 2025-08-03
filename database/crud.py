@@ -3,7 +3,7 @@
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import TypeVar
+from typing import Any, TypeVar
 
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
@@ -35,30 +35,32 @@ class CRUD:
         session = self.session_factory()
         try:
             yield session
-        except Exception as e:
+        except Exception:
             await session.rollback()
-            logger.exception("Failed to get session: %s", e)
+            logger.exception("Failed to get session")
             raise
         finally:
             await session.close()
 
-    async def create(self, **kwargs) -> T:
+    async def create(self, **kwargs: Any) -> T:  # noqa: ANN401
         """Create a new record in the database."""
         async with self.get_session() as session:
-            instance = self.model(**kwargs)
-            session.add(instance)
             try:
+                instance = self.model(**kwargs)
+                session.add(instance)
                 await session.commit()
                 await session.refresh(instance)
-                return instance
-            except SQLAlchemyError as e:
+            except SQLAlchemyError:
                 await session.rollback()
                 logger.exception(
-                    f"Failed to create {self.model.__name__}: {e}",
+                    "Failed to create %s",
+                    self.model.__name__,
                 )
                 raise
+            else:
+                return instance
 
-    async def get(self, **kwargs) -> T:
+    async def get(self, **kwargs: Any) -> T:  # noqa: ANN401
         """Retrieve a record by any field."""
         async with self.get_session() as session:
             query = await session.execute(
@@ -72,34 +74,37 @@ class CRUD:
             query = await session.execute(select(self.model))
             return query.scalars().all()
 
-    async def update(self, instance: T, **kwargs) -> T:
+    async def update(self, instance: T, **kwargs: Any) -> T:  # noqa: ANN401
         """Update a record's information."""
         async with self.get_session() as session:
-            instance = await session.merge(instance)
-            for key, value in kwargs.items():
-                setattr(instance, key, value)
             try:
+                for key, value in kwargs.items():
+                    setattr(instance, key, value)
+                session.add(instance)
                 await session.commit()
                 await session.refresh(instance)
-                return instance
-            except SQLAlchemyError as e:
+            except SQLAlchemyError:
                 await session.rollback()
                 logger.exception(
-                    f"Failed to update {self.model.__name__}: {e}",
+                    "Failed to update %s",
+                    self.model.__name__,
                 )
                 raise
+            else:
+                return instance
 
     async def delete(self, instance: T) -> bool:
-        """Delete a record."""
+        """Delete a record from the database."""
         async with self.get_session() as session:
-            instance = await session.merge(instance)
             try:
                 await session.delete(instance)
                 await session.commit()
-                return True
-            except SQLAlchemyError as e:
+            except SQLAlchemyError:
                 await session.rollback()
                 logger.exception(
-                    f"Failed to delete {self.model.__name__}: {e}",
+                    "Failed to delete %s",
+                    self.model.__name__,
                 )
                 raise
+            else:
+                return True

@@ -80,7 +80,7 @@ class NotSubbedFilter(Filter):
 
         try:
             member = await chat.get_member(user.id)
-        except Exception:
+        except Exception:  # noqa: BLE001
             return True
         else:
             return member.status not in self.ALLOWED_STATUSES

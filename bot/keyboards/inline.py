@@ -1,5 +1,6 @@
 """Inline keyboard templates."""
 
+from enum import Enum, auto
 from typing import Callable
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
@@ -7,6 +8,13 @@ from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from database.models import RequiredSubscriptions
 from locales import support_languages
 from service.data import Track
+
+
+class NavigationDirection(Enum):
+    """Navigation direction for pagination."""
+
+    PREVIOUS = auto()
+    NEXT = auto()
 
 
 def get_keyboard_of_tracks(
@@ -36,8 +44,11 @@ def get_keyboard_of_tracks(
 
     if total_pages > 0:
 
-        def create_navigation_button(is_next: bool) -> InlineKeyboardButton:
+        def create_navigation_button(
+            direction: NavigationDirection,
+        ) -> InlineKeyboardButton:
             """Create navigation button (prev/next) based on current page."""
+            is_next = direction == NavigationDirection.NEXT
             is_available = page < total_pages if is_next else page > 0
 
             return InlineKeyboardButton(
@@ -58,19 +69,23 @@ def get_keyboard_of_tracks(
 
         keyboard.append(
             [
-                create_navigation_button(is_next=False),
+                create_navigation_button(
+                    direction=NavigationDirection.PREVIOUS,
+                ),
                 InlineKeyboardButton(
                     text=f"{page + 1}/{total_pages + 1}",
                     callback_data="track:noop",
                 ),
-                create_navigation_button(is_next=True),
+                create_navigation_button(direction=NavigationDirection.NEXT),
             ],
         )
         keyboard.append(
             [
                 InlineKeyboardButton(
                     text="🔽",
-                    callback_data=f"track:all:{search_id}:{start_indx}:{end_indx}",
+                    callback_data=(
+                        f"track:all:{search_id}:{start_indx}:{end_indx}"
+                    ),
                 ),
             ],
         )
@@ -124,7 +139,12 @@ def get_subscribe_keyboard(
 ) -> InlineKeyboardMarkup:
     """Get subscribe keyboard."""
     chats = [
-        [InlineKeyboardButton(text=f"➕ {sub.chat_title}", url=sub.chat_link)]
+        [
+            InlineKeyboardButton(
+                text=f"➕ {sub.chat_title}",  # noqa: RUF001
+                url=sub.chat_link,
+            ),
+        ]
         for sub in sub_required
     ]
     chats.append(

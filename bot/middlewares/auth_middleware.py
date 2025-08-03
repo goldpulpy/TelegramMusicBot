@@ -22,7 +22,7 @@ class AuthMiddleware(BaseMiddleware):
         handler: Callable[[Update, dict[str, Any]], Awaitable[Any]],
         event: Update,
         data: dict[str, Any],
-    ) -> Any:
+    ) -> Awaitable[Any]:
         """Intercept incoming updates, process them and call the next."""
         data["user"] = await self.ensure_user_in_db(data["event_from_user"])
         return await handler(event, data)
@@ -45,7 +45,7 @@ class AuthMiddleware(BaseMiddleware):
 
     @staticmethod
     def _prepare_user_data(user: User) -> dict[str, Any]:
-        """Prepares user data for database operations."""
+        """Prepare user data for database operations."""
         return {
             "id": user.id,
             "username": user.username,

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 import urllib.parse
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 import aiohttp
 from bs4 import BeautifulSoup
@@ -63,22 +63,30 @@ class Music:
         url = urllib.parse.urljoin(self.BASE_URL, f"search/{keyword}")
         logger.info("Searching music with keyword: %s", keyword)
 
-        return await self._parse_tracks(url, is_search=True)
+        return await self._parse_search_tracks(url)
 
     async def get_top_hits(self) -> list[Track]:
         """Get top tracks."""
         url = urllib.parse.urljoin(self.BASE_URL, "besthit")
-        return await self._parse_tracks(url)
+        return await self._parse_regular_tracks(url)
 
     async def get_new_hits(self) -> list[Track]:
         """Get new hits."""
         url = urllib.parse.urljoin(self.BASE_URL, "newhit")
-        return await self._parse_tracks(url)
+        return await self._parse_regular_tracks(url)
+
+    async def _parse_search_tracks(self, url: str) -> list[Track]:
+        """Parse tracks from search results."""
+        return await self._parse_tracks(url, mode="search")
+
+    async def _parse_regular_tracks(self, url: str) -> list[Track]:
+        """Parse tracks from regular pages."""
+        return await self._parse_tracks(url, mode="regular")
 
     async def _parse_tracks(
         self,
         url: str,
-        is_search: bool = False,
+        mode: Literal["search", "regular"],
     ) -> list[Track]:
         """Parse tracks from the given URL."""
         try:
@@ -88,6 +96,8 @@ class Music:
             ) as response:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")
+
+                is_search = mode == "search"
                 tracks = [
                     Track.from_element(track_data, index, is_search=is_search)
                     for index, track_data in enumerate(
@@ -105,6 +115,11 @@ class Music:
 
         else:
             return tracks
+
+    def _raise_file_too_large_error(self, content_length: int) -> None:
+        """Raise an error for files that are too large."""
+        msg = f"File too large: {content_length} bytes"
+        raise MusicServiceError(msg)
 
     async def _download_data(
         self,
@@ -129,16 +144,13 @@ class Music:
                 content_length = response.content_length
 
                 if content_length and content_length > max_size:
-                    msg = f"File too large: {content_length} bytes"
-                    raise MusicServiceError(
-                        msg,
-                    )
+                    self._raise_file_too_large_error(content_length)
 
                 return await response.read()
 
-        except Exception:
+        except (aiohttp.ClientError, TimeoutError) as e:
             msg = f"Failed to download {resource_type}"
-            raise MusicServiceError(msg) from None
+            raise MusicServiceError(msg) from e
 
     async def get_audio_bytes(self, track: Track) -> bytes:
         """Download music file."""
