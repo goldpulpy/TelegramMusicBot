@@ -27,13 +27,8 @@ async def send_track(
 
         async with Music() as service:
             audio_bytes = await service.get_audio_bytes(track)
-            thumbnail_bytes = await service.get_thumbnail_bytes(track)
 
             audio_file = BufferedInputFile(audio_bytes, filename=track.name)
-            thumbnail_file = BufferedInputFile(
-                thumbnail_bytes,
-                filename=track.name,
-            )
 
         me = await bot.get_me()
 
@@ -46,7 +41,6 @@ async def send_track(
             title=track.title,
             performer=track.performer,
             caption=gettext("promo_caption").format(username=me.username),
-            thumbnail=thumbnail_file,
         )
     except Exception:
         if callback.message is not None:

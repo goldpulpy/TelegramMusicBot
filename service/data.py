@@ -33,7 +33,6 @@ class Track:
     title: str
     performer: str
     audio_url: str
-    thumbnail_url: str
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Track:
@@ -44,7 +43,6 @@ class Track:
             title=data["title"],
             performer=data["performer"],
             audio_url=data["audio_url"],
-            thumbnail_url=data["thumbnail_url"],
         )
 
     @classmethod
@@ -52,42 +50,24 @@ class Track:
         cls,
         element: BeautifulSoup | Tag,
         index: int,
-        *,
-        is_search: bool = False,
     ) -> Track:
         """Create Track from BeautifulSoup element."""
-        artist_name_element = element.find(class_="artist_name")
-        if artist_name_element is None or not hasattr(
-            artist_name_element,
-            "text",
-        ):
+        artist_name_element = element.find(class_="playlist-name-artist")
+        track_name_element = element.find(class_="playlist-name-title")
+        if artist_name_element is None or track_name_element is None:
             msg = "Could not find artist name element"
             raise TypeError(msg)
 
-        full_name = artist_name_element.text.strip()
-        if " - " not in full_name:
-            performer, title = "Unknown Artist", full_name
-        else:
-            performer, title = full_name.split(" - ", 1)
+        performer = artist_name_element.text.strip()
+        title = track_name_element.text.strip()
 
-        right_element = element.find(class_="right")
-        if not isinstance(right_element, Tag):
+        full_name = f"{performer} - {title}"
+
+        audio_url = element.find(class_="playlist-play")
+        if not isinstance(audio_url, Tag):
             msg = "Could not find audio URL element"
             raise TypeError(msg)
-        audio_url = right_element.get("data-id", "")
-
-        class_name = "little_thumb" if is_search else "resim_thumb"
-        thumbnail_element = element.find(class_=class_name)
-        if not isinstance(thumbnail_element, Tag):
-            msg = "Could not find thumbnail element"
-            raise TypeError(msg)
-
-        img_element = thumbnail_element.find("img")
-        if not isinstance(img_element, Tag):
-            msg = "Could not find image element"
-            raise TypeError(msg)
-
-        thumbnail_url = img_element.get("data-src", "")
+        audio_url = audio_url.get("data-url", "")
 
         return cls(
             index=index,
@@ -95,5 +75,4 @@ class Track:
             title=title,
             performer=performer,
             audio_url=str(audio_url),
-            thumbnail_url=str(thumbnail_url),
         )

@@ -57,12 +57,6 @@ msgstr "🔥 Топ песен"
 msgid "top_hits"
 msgstr "<b>🔥 Популярная музыка</b>"
 
-msgid "new_hits_button"
-msgstr "🆕 Новинки"
-
-msgid "new_hits"
-msgstr "<b>🆕 Новинки музыки</b>"
-
 msgid "searching"
 msgstr "🔍 Поиск: <b>{keyword}</b>"
 

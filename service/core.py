@@ -3,12 +3,11 @@
 from __future__ import annotations
 
 import logging
-import urllib.parse
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING
 
 import aiohttp
 from aiohttp import ClientTimeout
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 from typing_extensions import Self
 
 from .data import ServiceConfig, Track
@@ -23,8 +22,7 @@ logger = logging.getLogger(__name__)
 class Music:
     """Service for searching and downloading music."""
 
-    BASE_URL = "https://mp3wr.com"
-    TRACK_DOWNLOAD_URL = "https://cdn.mp3wr.com"
+    BASE_URL = "vuxo7.com"
 
     def __init__(self, config: ServiceConfig | None = None) -> None:
         """Initialize music service with optional configuration."""
@@ -62,34 +60,16 @@ class Music:
             msg = "Failed to initialize session"
             raise MusicServiceError(msg)
 
-        url = urllib.parse.urljoin(self.BASE_URL, f"search/{keyword}")
+        url = self.build_search_query(keyword)
         logger.info("Searching music with keyword: %s", keyword)
 
-        return await self._parse_search_tracks(url)
+        return await self._parse_tracks(url)
 
     async def get_top_hits(self) -> list[Track]:
         """Get top tracks."""
-        url = urllib.parse.urljoin(self.BASE_URL, "besthit")
-        return await self._parse_regular_tracks(url)
+        return await self._parse_tracks(f"https://{self.BASE_URL}")
 
-    async def get_new_hits(self) -> list[Track]:
-        """Get new hits."""
-        url = urllib.parse.urljoin(self.BASE_URL, "newhit")
-        return await self._parse_regular_tracks(url)
-
-    async def _parse_search_tracks(self, url: str) -> list[Track]:
-        """Parse tracks from search results."""
-        return await self._parse_tracks(url, mode="search")
-
-    async def _parse_regular_tracks(self, url: str) -> list[Track]:
-        """Parse tracks from regular pages."""
-        return await self._parse_tracks(url, mode="regular")
-
-    async def _parse_tracks(
-        self,
-        url: str,
-        mode: Literal["search", "regular"],
-    ) -> list[Track]:
+    async def _parse_tracks(self, url: str) -> list[Track]:
         """Parse tracks from the given URL."""
         try:
             if not self._session:
@@ -102,14 +82,16 @@ class Music:
             ) as response:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")
+                playlist = soup.find("ul", class_="playlist")
 
-                is_search = mode == "search"
+                if not isinstance(playlist, Tag):
+                    msg = "Could not find playlist element"
+                    raise TypeError(msg)
+
                 tracks = [
-                    Track.from_element(track_data, index, is_search=is_search)
+                    Track.from_element(track_data, index)
                     for index, track_data in enumerate(
-                        soup.find_all("item")
-                        if is_search
-                        else soup.find_all("li", class_="sarki-liste"),
+                        playlist.find_all("li"),
                     )
                 ]
 
@@ -160,14 +142,14 @@ class Music:
 
     async def get_audio_bytes(self, track: Track) -> bytes:
         """Download music file."""
-        url = track.audio_url
-        if url.startswith("/"):
-            url = urllib.parse.urljoin(self.BASE_URL, track.audio_url)
-        return await self._download_data(url, "audio", track.name)
+        return await self._download_data(track.audio_url, "audio", track.name)
 
-    async def get_thumbnail_bytes(self, track: Track) -> bytes:
-        """Download thumbnail image."""
-        url = track.thumbnail_url
-        if url.startswith("/"):
-            url = urllib.parse.urljoin(self.BASE_URL, track.thumbnail_url)
-        return await self._download_data(url, "thumbnail", track.name)
+    def build_search_query(self, keyword: str) -> str:
+        """Build search query."""
+        query = keyword.strip().lower().replace(" ", "-")
+        try:
+            subdomain = query.encode("idna").decode("ascii")
+        except UnicodeError:
+            subdomain = query
+
+        return f"https://{subdomain}.{self.BASE_URL}"

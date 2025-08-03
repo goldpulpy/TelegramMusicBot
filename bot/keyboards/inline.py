@@ -114,10 +114,6 @@ def get_menu_keyboard(gettext: Callable[[str], str]) -> InlineKeyboardMarkup:
                     text=gettext("top_hits_button"),
                     callback_data="track:list:top_hits",
                 ),
-                InlineKeyboardButton(
-                    text=gettext("new_hits_button"),
-                    callback_data="track:list:new_hits",
-                ),
             ],
             [
                 InlineKeyboardButton(

@@ -65,7 +65,6 @@ async def get_track_list(list_type: str) -> list[Track]:
     async with Music() as service:
         map_list_type = {
             "top_hits": service.get_top_hits,
-            "new_hits": service.get_new_hits,
         }
         return await map_list_type[list_type]()
 
