@@ -83,7 +83,10 @@ async def track_lists_handler(
     tracks = await get_track_list(list_type)
     search = await update_search(user, list_type, tracks)
 
-    if callback.message is None:
+    if callback.message is None or isinstance(
+        callback.message,
+        types.InaccessibleMessage,
+    ):
         await callback.answer("Cannot send message")
         return
 

@@ -1,3 +1,4 @@
+# type: ignore[reportPrivateImportUsage]
 """Entry point of the bot application."""
 
 import asyncio

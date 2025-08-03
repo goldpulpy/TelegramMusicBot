@@ -8,7 +8,9 @@ from service.data import Track
 async def load_tracks_from_db(search_id: int) -> list[Track]:
     """Get tracks from the database."""
     search_history_crud = CRUD(SearchHistory)
-    search: SearchHistory = await search_history_crud.get(id=int(search_id))
+    search: SearchHistory | None = await search_history_crud.get(
+        id=int(search_id),
+    )
 
     if search is None or not hasattr(search, "tracks"):
         return []

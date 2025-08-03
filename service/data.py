@@ -92,6 +92,6 @@ class Track:
             name=full_name,
             title=title,
             performer=performer,
-            audio_url=audio_url,
-            thumbnail_url=thumbnail_url,
+            audio_url=str(audio_url),
+            thumbnail_url=str(thumbnail_url),
         )

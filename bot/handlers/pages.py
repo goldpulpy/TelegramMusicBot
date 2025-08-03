@@ -23,14 +23,17 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
             return
 
         data_parts = callback.data.split(":")
-        if len(data_parts) < 4:
+        if len(data_parts) < 4:  # noqa: PLR2004
             await callback.answer("Invalid data format")
             return
 
         _, _, search_id, page = data_parts
         tracks: list[Track] = await load_tracks_from_db(int(search_id))
 
-        if callback.message is None:
+        if callback.message is None or isinstance(
+            callback.message,
+            types.InaccessibleMessage,
+        ):
             await callback.answer("Cannot edit message")
             return
 

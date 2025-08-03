@@ -36,7 +36,10 @@ async def language_handler(
         keyboard = inline.language_keyboard
 
         if isinstance(event, types.CallbackQuery):
-            if event.message is None:
+            if event.message is None or isinstance(
+                event.message,
+                types.InaccessibleMessage,
+            ):
                 await event.answer("Cannot edit message")
                 return
 

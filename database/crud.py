@@ -14,8 +14,7 @@ from .engine import async_session_factory
 if TYPE_CHECKING:
     from collections.abc import AsyncGenerator
 
-    from sqlalchemy.ext.asyncio import AsyncSession
-    from sqlalchemy.orm import sessionmaker
+    from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 
 T = TypeVar("T")
@@ -29,7 +28,9 @@ class CRUD(Generic[T]):
     def __init__(
         self,
         model: type[T],
-        session_factory: sessionmaker = async_session_factory,
+        session_factory: async_sessionmaker[
+            AsyncSession
+        ] = async_session_factory,
     ) -> None:
         """Initialize the CRUD class."""
         self.model = model
