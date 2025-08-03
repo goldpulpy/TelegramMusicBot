@@ -1,7 +1,7 @@
 """Language handler for the bot."""
+from __future__ import annotations
 
 import logging
-from typing import Union
 
 from aiogram import Bot, F, Router, types
 from aiogram.filters import Command
@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 
 
 async def language_handler(
-    event: Union[types.Message, types.CallbackQuery],
+    event: types.Message | types.CallbackQuery,
     user: User,
 ) -> None:
     """Language handler."""
@@ -37,7 +37,7 @@ async def language_handler(
         else:
             await event.answer(text, reply_markup=keyboard)
     except Exception as e:
-        logger.error("Failed to send message: %s", e)
+        logger.exception("Failed to send message: %s", e)
 
 
 async def language_set_handler(
@@ -54,7 +54,7 @@ async def language_set_handler(
         await bot.set_my_commands(command.get_commands(gettext))
         await menu_handler(callback)
     except Exception as e:
-        logger.error("Failed to set language: %s", e)
+        logger.exception("Failed to set language: %s", e)
 
 
 def register(router: Router) -> None:

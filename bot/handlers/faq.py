@@ -18,7 +18,7 @@ async def faq_handler(callback: types.CallbackQuery) -> None:
             reply_markup=inline.get_back_keyboard(gettext, "menu"),
         )
     except Exception as e:
-        logger.error("Failed to send message: %s", e)
+        logger.exception("Failed to send message: %s", e)
 
 
 def register(router: Router) -> None:

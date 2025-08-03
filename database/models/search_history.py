@@ -11,7 +11,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import JSONB
 
-from ..engine import Base
+from database.engine import Base
 
 
 class SearchHistory(Base):

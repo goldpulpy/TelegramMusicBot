@@ -1,4 +1,5 @@
 """Subscription required handler for the bot."""
+from __future__ import annotations
 
 import logging
 
@@ -27,7 +28,7 @@ async def sub_required_handler(
         else:
             await event.message.answer(text, reply_markup=keyboard)
     except Exception as e:
-        logger.error("Failed to send message: %s", e)
+        logger.exception("Failed to send message: %s", e)
 
 
 async def sub_check_handler(

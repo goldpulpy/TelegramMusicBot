@@ -1,4 +1,4 @@
-"""Data classes"""
+"""Data classes."""
 
 import json
 import os
@@ -21,7 +21,7 @@ class ServiceConfig:
 
 @dataclass
 class Track:
-    """Track data class"""
+    """Track data class."""
 
     index: int
     name: str
@@ -37,7 +37,7 @@ class Track:
         index: int,
         is_search: bool = False,
     ) -> "Track":
-        """Create Track from BeautifulSoup element"""
+        """Create Track from BeautifulSoup element."""
         full_name = element.find(class_="artist_name").text.strip()
         performer, title = full_name.split(" - ", 1)
         audio_url = element.find(class_="right").get("data-id")

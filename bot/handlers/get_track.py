@@ -37,7 +37,7 @@ async def send_track(
         )
     except Exception as e:
         await callback.message.answer(gettext("send_track_error"))
-        logger.error("Failed to send track: %s", e)
+        logger.exception("Failed to send track: %s", e)
 
 
 async def get_track_handler(callback: types.CallbackQuery, bot: Bot) -> None:
@@ -50,7 +50,7 @@ async def get_track_handler(callback: types.CallbackQuery, bot: Bot) -> None:
         await send_track(callback, bot, track)
 
     except Exception as e:
-        logger.error("Failed get track handler: %s", e)
+        logger.exception("Failed get track handler: %s", e)
 
 
 async def get_all_from_page_handler(
@@ -66,7 +66,7 @@ async def get_all_from_page_handler(
             await send_track(callback, bot, track)
 
     except Exception as e:
-        logger.error("Failed get all from page handler: %s", e)
+        logger.exception("Failed get all from page handler: %s", e)
 
 
 def register(router: Router) -> None:

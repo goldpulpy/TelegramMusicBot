@@ -1,11 +1,12 @@
 """Music service core module for downloading and searching music."""
+from __future__ import annotations
 
 import logging
 import urllib.parse
-from typing import Optional
 
 import aiohttp
 from bs4 import BeautifulSoup
+from typing_extensions import Self
 
 from .data import ServiceConfig, Track
 from .exceptions import MusicServiceError
@@ -19,12 +20,12 @@ class Music:
     BASE_URL = "https://mp3wr.com"
     TRACK_DOWNLOAD_URL = "https://cdn.mp3wr.com"
 
-    def __init__(self, config: Optional[ServiceConfig] = None) -> None:
+    def __init__(self, config: ServiceConfig | None = None) -> None:
         """Initialize music service with optional configuration."""
         self._config = config or ServiceConfig()
-        self._session: Optional[aiohttp.ClientSession] = None
+        self._session: aiohttp.ClientSession | None = None
 
-    async def __aenter__(self) -> "Music":
+    async def __aenter__(self) -> Self:
         """Context manager entry point."""
         await self.connect()
         return self
@@ -87,7 +88,8 @@ class Music:
             return tracks
 
         except (aiohttp.ClientError, TimeoutError) as e:
-            raise MusicServiceError(f"Failed to search music: {e!s}") from e
+            msg = f"Failed to search music: {e!s}"
+            raise MusicServiceError(msg) from e
 
     async def _download_data(
         self, url: str, resource_type: str, track_name: str,
@@ -108,14 +110,16 @@ class Music:
                 content_length = response.content_length
 
                 if content_length and content_length > MAX_SIZE:
+                    msg = f"File too large: {content_length} bytes"
                     raise MusicServiceError(
-                        f"File too large: {content_length} bytes",
+                        msg,
                     )
 
                 return await response.read()
         except Exception as e:
+            msg = f"Failed to download {resource_type}: {e!s}"
             raise MusicServiceError(
-                f"Failed to download {resource_type}: {e!s}",
+                msg,
             ) from e
 
     async def get_audio_bytes(self, track: Track) -> bytes:

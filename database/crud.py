@@ -3,7 +3,7 @@
 import logging
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import Type, TypeVar
+from typing import TypeVar
 
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
@@ -22,7 +22,7 @@ class CRUD:
 
     def __init__(
         self,
-        model: Type[T],
+        model: type[T],
         session_factory: sessionmaker = async_session_factory,
     ) -> None:
         """Initialize the CRUD class."""
@@ -37,7 +37,7 @@ class CRUD:
             yield session
         except Exception as e:
             await session.rollback()
-            logger.error("Failed to get session: %s", e)
+            logger.exception("Failed to get session: %s", e)
             raise
         finally:
             await session.close()
@@ -53,7 +53,7 @@ class CRUD:
                 return instance
             except SQLAlchemyError as e:
                 await session.rollback()
-                logger.error(f"Failed to create {self.model.__name__}: {e}")
+                logger.exception(f"Failed to create {self.model.__name__}: {e}")
                 raise
 
     async def get(self, **kwargs) -> T:
@@ -62,8 +62,7 @@ class CRUD:
             query = await session.execute(
                 select(self.model).filter_by(**kwargs),
             )
-            instance = query.scalar_one_or_none()
-            return instance
+            return query.scalar_one_or_none()
 
     async def get_all(self) -> list[T]:
         """Get all records."""
@@ -83,7 +82,7 @@ class CRUD:
                 return instance
             except SQLAlchemyError as e:
                 await session.rollback()
-                logger.error(f"Failed to update {self.model.__name__}: {e}")
+                logger.exception(f"Failed to update {self.model.__name__}: {e}")
                 raise
 
     async def delete(self, instance: T) -> bool:
@@ -96,5 +95,5 @@ class CRUD:
                 return True
             except SQLAlchemyError as e:
                 await session.rollback()
-                logger.error(f"Failed to delete {self.model.__name__}: {e}")
+                logger.exception(f"Failed to delete {self.model.__name__}: {e}")
                 raise

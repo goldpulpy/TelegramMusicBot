@@ -1,7 +1,7 @@
 """Menu handler for the bot."""
+from __future__ import annotations
 
 import logging
-from typing import Union
 
 from aiogram import F, Router, types
 from aiogram.filters import Command, CommandStart
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 
 async def menu_handler(
-    event: Union[types.Message, types.CallbackQuery],
+    event: types.Message | types.CallbackQuery,
 ) -> None:
     """Menu handler."""
     try:
@@ -25,7 +25,7 @@ async def menu_handler(
         else:
             await event.answer(text, reply_markup=keyboard)
     except Exception as e:
-        logger.error("Failed to handle menu event: %s", e)
+        logger.exception("Failed to handle menu event: %s", e)
 
 
 def register(router: Router) -> None:

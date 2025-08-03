@@ -1,4 +1,4 @@
-"""Exceptions for music service"""
+"""Exceptions for music service."""
 
 
 class MusicServiceError(Exception):

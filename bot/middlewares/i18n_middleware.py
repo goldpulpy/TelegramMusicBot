@@ -1,9 +1,12 @@
 """Custom i18n middleware (language selection)."""
 
+from typing import TYPE_CHECKING
+
 from aiogram.types import Message
 from aiogram.utils.i18n.middleware import I18nMiddleware as BaseI18nMiddleware
 
-from database.models import User
+if TYPE_CHECKING:
+    from database.models import User
 
 
 class I18nMiddleware(BaseI18nMiddleware):

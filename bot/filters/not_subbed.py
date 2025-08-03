@@ -1,20 +1,23 @@
 """Check if user is subbed to the channel."""
+from __future__ import annotations
 
 import logging
+from typing import TYPE_CHECKING
 
-from aiogram import Bot, types
 from aiogram.enums import ChatMemberStatus
 from aiogram.filters import Filter
 
 from database.crud import CRUD
 from database.models import RequiredSubscriptions, User
 
+if TYPE_CHECKING:
+    from aiogram import Bot, types
+
 logger = logging.getLogger(__name__)
 
 
 class NotSubbedFilter(Filter):
-    """A filter that checks if a user is subbed to the channel.
-    """
+    """A filter that checks if a user is subbed to the channel."""
 
     ALLOWED_STATUSES = {
         ChatMemberStatus.MEMBER,
@@ -49,7 +52,7 @@ class NotSubbedFilter(Filter):
         try:
             chat = await bot.get_chat(sub.chat_id)
         except Exception as e:
-            logger.error(f"Failed to get chat {sub.chat_id}: {e}")
+            logger.exception(f"Failed to get chat {sub.chat_id}: {e}")
             return False
 
         try:

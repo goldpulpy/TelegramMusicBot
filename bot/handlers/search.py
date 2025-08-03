@@ -21,12 +21,11 @@ async def update_search(
     await user_crud.update(user, search_queries=user.search_queries + 1)
 
     search_history_crud = CRUD(SearchHistory)
-    search = await search_history_crud.create(
+    return await search_history_crud.create(
         user_id=user.id,
         keyword=keyword,
         tracks=[track.__dict__ for track in tracks],
     )
-    return search
 
 
 async def search_handler(message: types.Message, user: User) -> None:
@@ -49,7 +48,7 @@ async def search_handler(message: types.Message, user: User) -> None:
             reply_markup=inline.get_keyboard_of_tracks(tracks, search.id),
         )
     except Exception as e:
-        logger.error("Failed to send message: %s", e)
+        logger.exception("Failed to send message: %s", e)
 
 
 async def get_track_list(list_type: str) -> list[Track]:

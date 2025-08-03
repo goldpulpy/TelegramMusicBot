@@ -1,12 +1,15 @@
 """Pages handler for the bot."""
 
 import logging
+from typing import TYPE_CHECKING
 
 from aiogram import F, Router, types
 
 from bot.keyboards import inline
 from bot.utils import load_tracks_from_db
-from service.data import Track
+
+if TYPE_CHECKING:
+    from service.data import Track
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +26,7 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
             ),
         )
     except Exception as e:
-        logger.error("Failed to send message: %s", e)
+        logger.exception("Failed to send message: %s", e)
 
 
 def register(router: Router) -> None:

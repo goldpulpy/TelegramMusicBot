@@ -2,7 +2,7 @@
 
 import logging
 from collections.abc import Awaitable
-from typing import Any, Callable, Dict
+from typing import Any, Callable
 
 from aiogram import BaseMiddleware
 from aiogram.types import Update
@@ -19,9 +19,9 @@ class AuthMiddleware(BaseMiddleware):
 
     async def __call__(
         self,
-        handler: Callable[[Update, Dict[str, Any]], Awaitable[Any]],
+        handler: Callable[[Update, dict[str, Any]], Awaitable[Any]],
         event: Update,
-        data: Dict[str, Any],
+        data: dict[str, Any],
     ) -> Any:
         """Intercepts incoming updates, processes them and calls the next."""
         data["user"] = await self.ensure_user_in_db(data["event_from_user"])
@@ -36,7 +36,7 @@ class AuthMiddleware(BaseMiddleware):
             return await self._get_or_create_user(user, user_crud, user_data)
 
         except Exception as e:
-            logger.error("Failed to process user %s: %s", user.id, str(e))
+            logger.exception("Failed to process user %s: %s", user.id, str(e))
             raise
 
     def _get_user_crud(self) -> CRUD:
@@ -44,7 +44,7 @@ class AuthMiddleware(BaseMiddleware):
         return CRUD(User)
 
     @staticmethod
-    def _prepare_user_data(user: User) -> Dict[str, Any]:
+    def _prepare_user_data(user: User) -> dict[str, Any]:
         """Prepares user data for database operations."""
         return {
             "id": user.id,
@@ -55,7 +55,7 @@ class AuthMiddleware(BaseMiddleware):
 
     @staticmethod
     async def _get_or_create_user(
-        user: User, user_crud: CRUD, user_data: Dict[str, Any],
+        user: User, user_crud: CRUD, user_data: dict[str, Any],
     ) -> User:
         """Gets existing user or creates new one."""
         db_user = await user_crud.get(id=user.id)

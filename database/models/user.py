@@ -2,7 +2,7 @@
 
 from sqlalchemy import BigInteger, Column, DateTime, Integer, String, func
 
-from ..engine import Base
+from database.engine import Base
 
 
 class User(Base):
