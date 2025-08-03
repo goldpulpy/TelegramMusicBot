@@ -53,7 +53,9 @@ class CRUD:
                 return instance
             except SQLAlchemyError as e:
                 await session.rollback()
-                logger.exception(f"Failed to create {self.model.__name__}: {e}")
+                logger.exception(
+                    f"Failed to create {self.model.__name__}: {e}",
+                )
                 raise
 
     async def get(self, **kwargs) -> T:
@@ -82,7 +84,9 @@ class CRUD:
                 return instance
             except SQLAlchemyError as e:
                 await session.rollback()
-                logger.exception(f"Failed to update {self.model.__name__}: {e}")
+                logger.exception(
+                    f"Failed to update {self.model.__name__}: {e}",
+                )
                 raise
 
     async def delete(self, instance: T) -> bool:
@@ -95,5 +99,7 @@ class CRUD:
                 return True
             except SQLAlchemyError as e:
                 await session.rollback()
-                logger.exception(f"Failed to delete {self.model.__name__}: {e}")
+                logger.exception(
+                    f"Failed to delete {self.model.__name__}: {e}",
+                )
                 raise

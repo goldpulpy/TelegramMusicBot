@@ -32,8 +32,8 @@ async def create_bot() -> Bot:
     except TokenValidationError:
         logger.exception("Invalid token provided: %s", bot_config.token)
         raise
-    except Exception as e:
-        logger.exception("Failed to create bot instance: %s", str(e))
+    except Exception:
+        logger.exception("Failed to create bot instance")
         raise
 
 

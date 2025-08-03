@@ -1,4 +1,5 @@
 """Menu handler for the bot."""
+
 from __future__ import annotations
 
 import logging
@@ -24,12 +25,12 @@ async def menu_handler(
             await event.message.edit_text(text, reply_markup=keyboard)
         else:
             await event.answer(text, reply_markup=keyboard)
-    except Exception as e:
-        logger.exception("Failed to handle menu event: %s", e)
+    except Exception:
+        logger.exception("Failed to handle menu event")
 
 
 def register(router: Router) -> None:
-    """Registers start handler with the router."""
+    """Register start handler with the router."""
     router.message.register(menu_handler, CommandStart())
     router.message.register(menu_handler, Command("menu"))
     router.callback_query.register(menu_handler, F.data == "menu")

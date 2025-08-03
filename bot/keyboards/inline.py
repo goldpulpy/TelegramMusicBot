@@ -10,16 +10,18 @@ from service.data import Track
 
 
 def get_keyboard_of_tracks(
-    tracks: list[Track], search_id: int, page: int = 0,
+    tracks: list[Track],
+    search_id: int,
+    page: int = 0,
 ) -> InlineKeyboardMarkup:
     """Create paginated inline keyboard for track selection."""
-    TRACKS_PER_PAGE = 10
+    tracks_per_page = 10
 
-    total_pages = max((len(tracks) - 1) // TRACKS_PER_PAGE, 0)
+    total_pages = max((len(tracks) - 1) // tracks_per_page, 0)
     page = min(max(0, page), total_pages)
 
-    start_indx = page * TRACKS_PER_PAGE
-    end_indx = (page + 1) * TRACKS_PER_PAGE
+    start_indx = page * tracks_per_page
+    end_indx = (page + 1) * tracks_per_page
     current_page = tracks[start_indx:end_indx]
 
     keyboard = [
@@ -104,10 +106,12 @@ def get_menu_keyboard(gettext: Callable[[str], str]) -> InlineKeyboardMarkup:
             ],
             [
                 InlineKeyboardButton(
-                    text=gettext("faq_button"), callback_data="faq",
+                    text=gettext("faq_button"),
+                    callback_data="faq",
                 ),
                 InlineKeyboardButton(
-                    text=gettext("language_button"), callback_data="language",
+                    text=gettext("language_button"),
+                    callback_data="language",
                 ),
             ],
         ],
@@ -126,7 +130,8 @@ def get_subscribe_keyboard(
     chats.append(
         [
             InlineKeyboardButton(
-                text=gettext("sub_check_button"), callback_data="sub_check",
+                text=gettext("sub_check_button"),
+                callback_data="sub_check",
             ),
         ],
     )
@@ -134,14 +139,16 @@ def get_subscribe_keyboard(
 
 
 def get_back_keyboard(
-    gettext: Callable[[str], str], callback_data: str,
+    gettext: Callable[[str], str],
+    callback_data: str,
 ) -> InlineKeyboardMarkup:
     """Get back keyboard."""
     return InlineKeyboardMarkup(
         inline_keyboard=[
             [
                 InlineKeyboardButton(
-                    text=gettext("back_button"), callback_data=callback_data,
+                    text=gettext("back_button"),
+                    callback_data=callback_data,
                 ),
             ],
         ],

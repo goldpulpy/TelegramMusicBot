@@ -23,24 +23,24 @@ class AuthMiddleware(BaseMiddleware):
         event: Update,
         data: dict[str, Any],
     ) -> Any:
-        """Intercepts incoming updates, processes them and calls the next."""
+        """Intercept incoming updates, process them and call the next."""
         data["user"] = await self.ensure_user_in_db(data["event_from_user"])
         return await handler(event, data)
 
     async def ensure_user_in_db(self, user: User) -> User:
-        """Ensures that the user is registered in the database."""
+        """Ensure that the user is registered in the database."""
         user_crud = self._get_user_crud()
         user_data = self._prepare_user_data(user)
 
         try:
             return await self._get_or_create_user(user, user_crud, user_data)
 
-        except Exception as e:
-            logger.exception("Failed to process user %s: %s", user.id, str(e))
+        except Exception:
+            logger.exception("Failed to process user %s", user.id)
             raise
 
     def _get_user_crud(self) -> CRUD:
-        """Creates CRUD instance for User model."""
+        """Create CRUD instance for User model."""
         return CRUD(User)
 
     @staticmethod
@@ -55,9 +55,11 @@ class AuthMiddleware(BaseMiddleware):
 
     @staticmethod
     async def _get_or_create_user(
-        user: User, user_crud: CRUD, user_data: dict[str, Any],
+        user: User,
+        user_crud: CRUD,
+        user_data: dict[str, Any],
     ) -> User:
-        """Gets existing user or creates new one."""
+        """Get existing user or create new one."""
         db_user = await user_crud.get(id=user.id)
 
         if not db_user:

@@ -10,6 +10,7 @@ def get_commands(gettext: Callable[[str], str]) -> list[BotCommand]:
     return [
         BotCommand(command="menu", description=gettext("menu_command")),
         BotCommand(
-            command="language", description=gettext("language_command"),
+            command="language",
+            description=gettext("language_command"),
         ),
     ]

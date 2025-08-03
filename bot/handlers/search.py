@@ -14,9 +14,11 @@ logger = logging.getLogger(__name__)
 
 
 async def update_search(
-    user: User, keyword: str, tracks: list[Track],
+    user: User,
+    keyword: str,
+    tracks: list[Track],
 ) -> SearchHistory:
-    """Updates the user in the database."""
+    """Update the user in the database."""
     user_crud = CRUD(User)
     await user_crud.update(user, search_queries=user.search_queries + 1)
 
@@ -29,7 +31,7 @@ async def update_search(
 
 
 async def search_handler(message: types.Message, user: User) -> None:
-    """Handles the search."""
+    """Handle the search."""
     try:
         keyword = message.text.strip()
         if not keyword or len(keyword) > 100:
@@ -47,12 +49,12 @@ async def search_handler(message: types.Message, user: User) -> None:
             gettext("search_result").format(keyword=keyword),
             reply_markup=inline.get_keyboard_of_tracks(tracks, search.id),
         )
-    except Exception as e:
-        logger.exception("Failed to send message: %s", e)
+    except Exception:
+        logger.exception("Failed to send message")
 
 
 async def get_track_list(list_type: str) -> list[Track]:
-    """Gets the track list."""
+    """Get the track list."""
     async with Music() as service:
         map_list_type = {
             "top_hits": service.get_top_hits,
@@ -62,9 +64,10 @@ async def get_track_list(list_type: str) -> list[Track]:
 
 
 async def track_lists_handler(
-    callback: types.CallbackQuery, user: User,
+    callback: types.CallbackQuery,
+    user: User,
 ) -> None:
-    """Handles the track lists."""
+    """Handle the track lists."""
     _, _, list_type = callback.data.split(":")
     tracks = await get_track_list(list_type)
     search = await update_search(user, list_type, tracks)
@@ -75,8 +78,9 @@ async def track_lists_handler(
 
 
 def register(router: Router) -> None:
-    """Registers search handler with the router."""
+    """Register search handler with the router."""
     router.message.register(search_handler)
     router.callback_query.register(
-        track_lists_handler, F.data.startswith("track:list:"),
+        track_lists_handler,
+        F.data.startswith("track:list:"),
     )

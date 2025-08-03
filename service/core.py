@@ -1,8 +1,10 @@
 """Music service core module for downloading and searching music."""
+
 from __future__ import annotations
 
 import logging
 import urllib.parse
+from typing import TYPE_CHECKING
 
 import aiohttp
 from bs4 import BeautifulSoup
@@ -10,6 +12,9 @@ from typing_extensions import Self
 
 from .data import ServiceConfig, Track
 from .exceptions import MusicServiceError
+
+if TYPE_CHECKING:
+    from types import TracebackType
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +35,12 @@ class Music:
         await self.connect()
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+    async def __aexit__(
+        self,
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
+        exc_tb: TracebackType | None,
+    ) -> None:
         """Context manager exit point."""
         await self.disconnect()
 
@@ -66,17 +76,20 @@ class Music:
         return await self._parse_tracks(url)
 
     async def _parse_tracks(
-        self, url: str, is_search: bool = False,
+        self,
+        url: str,
+        is_search: bool = False,
     ) -> list[Track]:
         """Parse tracks from the given URL."""
         try:
             async with self._session.get(
-                url, timeout=self._config.timeout,
+                url,
+                timeout=self._config.timeout,
             ) as response:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")
                 tracks = [
-                    Track.from_element(track_data, index, is_search)
+                    Track.from_element(track_data, index, is_search=is_search)
                     for index, track_data in enumerate(
                         soup.find_all("item")
                         if is_search
@@ -85,17 +98,22 @@ class Music:
                 ]
 
             logger.info("Found %d tracks", len(tracks))
-            return tracks
 
         except (aiohttp.ClientError, TimeoutError) as e:
             msg = f"Failed to search music: {e!s}"
             raise MusicServiceError(msg) from e
 
+        else:
+            return tracks
+
     async def _download_data(
-        self, url: str, resource_type: str, track_name: str,
+        self,
+        url: str,
+        resource_type: str,
+        track_name: str,
     ) -> bytes:
-        """Generic method for downloading data."""
-        MAX_SIZE = 50 * 1024 * 1024  # 50MB
+        """Download data."""
+        max_size = 50 * 1024 * 1024  # 50MB
 
         if not self._session:
             await self.connect()
@@ -104,23 +122,23 @@ class Music:
 
         try:
             async with self._session.get(
-                url, timeout=self._config.timeout,
+                url,
+                timeout=self._config.timeout,
             ) as response:
                 response.raise_for_status()
                 content_length = response.content_length
 
-                if content_length and content_length > MAX_SIZE:
+                if content_length and content_length > max_size:
                     msg = f"File too large: {content_length} bytes"
                     raise MusicServiceError(
                         msg,
                     )
 
                 return await response.read()
-        except Exception as e:
-            msg = f"Failed to download {resource_type}: {e!s}"
-            raise MusicServiceError(
-                msg,
-            ) from e
+
+        except Exception:
+            msg = f"Failed to download {resource_type}"
+            raise MusicServiceError(msg) from None
 
     async def get_audio_bytes(self, track: Track) -> bytes:
         """Download music file."""

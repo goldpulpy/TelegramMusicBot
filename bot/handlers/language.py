@@ -1,4 +1,5 @@
 """Language handler for the bot."""
+
 from __future__ import annotations
 
 import logging
@@ -36,12 +37,14 @@ async def language_handler(
             await event.message.edit_text(text, reply_markup=keyboard)
         else:
             await event.answer(text, reply_markup=keyboard)
-    except Exception as e:
-        logger.exception("Failed to send message: %s", e)
+    except Exception:
+        logger.exception("Failed to send message")
 
 
 async def language_set_handler(
-    callback: types.CallbackQuery, user: User, bot: Bot,
+    callback: types.CallbackQuery,
+    user: User,
+    bot: Bot,
 ) -> None:
     """Language set handler."""
     try:
@@ -53,15 +56,16 @@ async def language_set_handler(
 
         await bot.set_my_commands(command.get_commands(gettext))
         await menu_handler(callback)
-    except Exception as e:
-        logger.exception("Failed to set language: %s", e)
+    except Exception:
+        logger.exception("Failed to set language")
 
 
 def register(router: Router) -> None:
-    """Registers language handler with the router."""
+    """Register language handler with the router."""
     router.message.register(language_handler, LanguageFilter())
     router.message.register(language_handler, Command("language"))
     router.callback_query.register(language_handler, F.data == "language")
     router.callback_query.register(
-        language_set_handler, F.data.startswith("language:set:"),
+        language_set_handler,
+        F.data.startswith("language:set:"),
     )

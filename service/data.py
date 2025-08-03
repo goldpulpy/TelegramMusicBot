@@ -1,12 +1,12 @@
 """Data classes."""
 
 import json
-import os
 from dataclasses import dataclass, field
+from pathlib import Path
 
 from bs4 import BeautifulSoup
 
-headers_path = os.path.join(os.path.dirname(__file__), "headers.json")
+headers_path = Path(__file__).parent / "headers.json"
 
 
 @dataclass
@@ -15,7 +15,7 @@ class ServiceConfig:
 
     timeout: int = 30
     headers: dict = field(
-        default_factory=lambda: json.load(open(headers_path)),
+        default_factory=lambda: json.load(Path.open(headers_path)),
     )
 
 
@@ -35,6 +35,7 @@ class Track:
         cls,
         element: BeautifulSoup,
         index: int,
+        *,
         is_search: bool = False,
     ) -> "Track":
         """Create Track from BeautifulSoup element."""

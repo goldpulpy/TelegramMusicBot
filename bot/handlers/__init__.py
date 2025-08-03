@@ -1,4 +1,4 @@
-"""Setup router for the bot."""
+"""Set up handlers for the bot."""
 
 from aiogram import Dispatcher, Router
 
@@ -6,7 +6,7 @@ from . import faq, get_track, language, menu, pages, search, subscribe
 
 
 def setup(dp: Dispatcher) -> None:
-    """Setup handlers for the bot."""
+    """Set up handlers for the bot."""
     router = Router()
 
     # Register routers

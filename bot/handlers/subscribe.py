@@ -1,4 +1,5 @@
 """Subscription required handler for the bot."""
+
 from __future__ import annotations
 
 import logging
@@ -27,8 +28,8 @@ async def sub_required_handler(
             await event.answer(text, reply_markup=keyboard)
         else:
             await event.message.answer(text, reply_markup=keyboard)
-    except Exception as e:
-        logger.exception("Failed to send message: %s", e)
+    except Exception:
+        logger.exception("Failed to send message")
 
 
 async def sub_check_handler(
@@ -46,7 +47,7 @@ async def sub_check_handler(
 
 
 def register(router: Router) -> None:
-    """Registers FAQ handler with the router."""
+    """Register FAQ handler with the router."""
     router.callback_query.register(sub_check_handler, F.data == "sub_check")
     router.callback_query.register(sub_required_handler, NotSubbedFilter())
     router.message.register(sub_required_handler, NotSubbedFilter())
