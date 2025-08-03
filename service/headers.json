@@ -1,12 +1,11 @@
 {
-  "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
-  "referer": "https://mp3wr.com",
-  "sec-ch-ua": "Google Chrome;v=131, Chromium;v=131, Not_A Brand;v=24",
+  "user_agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36",
+  "sec-ch-ua": "'Not)A;Brand';v='8', 'Chromium';v='138', 'Google Chrome';v='138'",
   "sec-ch-ua-mobile": "?0",
   "sec-ch-ua-platform": "Linux",
-  "sec-fetch-dest": "document",
-  "sec-fetch-mode": "navigate",
-  "sec-fetch-site": "same-site",
-  "sec-fetch-user": "?1",
+  "sec-fetch-dest": "audio",
+  "sec-fetch-mode": "no-cors",
+  "sec-fetch-site": "cross-site",
+  "sec-fetch-storage-access": "active",
   "upgrade-insecure-requests": "1"
 }

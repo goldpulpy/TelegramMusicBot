@@ -1,9 +1,20 @@
 """Search history database model."""
-from sqlalchemy.dialects.postgresql import JSONB
+
+from __future__ import annotations
+
+from datetime import datetime
+
 from sqlalchemy import (
-    Column, String, DateTime, Integer, BigInteger, ForeignKey, func
+    BigInteger,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
 )
-from ..engine import Base
+from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy.orm import Mapped, mapped_column
+
+from database.engine import Base
 
 
 class SearchHistory(Base):
@@ -11,8 +22,17 @@ class SearchHistory(Base):
 
     __tablename__ = "search_history"
 
-    id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(BigInteger, ForeignKey('users.id'))
-    keyword = Column(String, default=None)
-    tracks = Column(JSONB, default=[])
-    created_at = Column(DateTime, default=func.now())
+    id: Mapped[int] = mapped_column(
+        Integer,
+        primary_key=True,
+        autoincrement=True,
+    )
+
+    user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id"))
+    keyword: Mapped[str | None] = mapped_column(String, default=None)
+    tracks: Mapped[list[dict[str, str]]] = mapped_column(JSONB, default=[])
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime,
+        default=datetime.now,
+    )

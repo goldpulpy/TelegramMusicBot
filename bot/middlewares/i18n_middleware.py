@@ -1,13 +1,22 @@
 """Custom i18n middleware (language selection)."""
-from aiogram.types import Message
+
+from typing import TYPE_CHECKING
+
+from aiogram.types import TelegramObject
 from aiogram.utils.i18n.middleware import I18nMiddleware as BaseI18nMiddleware
-from database.models import User
+
+if TYPE_CHECKING:
+    from database.models import User
 
 
 class I18nMiddleware(BaseI18nMiddleware):
     """Custom i18n middleware for the bot."""
 
-    async def get_locale(self, event: Message, data: dict) -> str:
+    async def get_locale(
+        self,
+        event: TelegramObject,  # noqa: ARG002
+        data: dict,
+    ) -> str:
         """Get user locale."""
-        user: User = data['user']
-        return user.language_code
+        user: User = data["user"]
+        return user.language_code or "en"

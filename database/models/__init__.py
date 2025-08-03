@@ -1,6 +1,7 @@
 """Database models."""
-from .user import User
-from .search_history import SearchHistory
-from .required_subs import RequiredSubscriptions
 
-__all__ = ['User', 'SearchHistory', 'RequiredSubscriptions']
+from .required_subs import RequiredSubscriptions
+from .search_history import SearchHistory
+from .user import User
+
+__all__ = ["RequiredSubscriptions", "SearchHistory", "User"]

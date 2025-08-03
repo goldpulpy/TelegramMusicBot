@@ -56,12 +56,6 @@ msgstr "🔥 Top"
 msgid "top_hits"
 msgstr "<b>🔥 Popular music</b>"
 
-msgid "new_hits_button"
-msgstr "🆕 New tracks"
-
-msgid "new_hits"
-msgstr "<b>🆕 New tracks</b>"
-
 msgid "searching"
 msgstr "🔍 Searching: <b>{keyword}</b>"
 
@@ -88,3 +82,18 @@ msgstr "❗️ To use the bot, you need to subscribe to the channels."
 
 msgid "sub_check_button"
 msgstr "✅ I'm subscribed"
+
+msgid "cannot_edit_message"
+msgstr "❌ Failed to edit message."
+
+msgid "cannot_send_message"
+msgstr "❌ Failed to send message."
+
+msgid "invalid_data"
+msgstr "❌ Invalid data."
+
+msgid "cannot_access_chat"
+msgstr "❌ Failed to access chat."
+
+msgid "error_occurred"
+msgstr "❌ Error occurred."
