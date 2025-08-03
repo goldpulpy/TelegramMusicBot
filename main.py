@@ -1,4 +1,3 @@
-# type: ignore[reportPrivateImportUsage]
 """Entry point of the bot application."""
 
 import asyncio
@@ -25,19 +24,17 @@ logger = logging.getLogger(__name__)
 async def create_bot() -> Bot:
     """Create and return a Bot instance."""
     try:
-        if bot_config.token:
-            bot = Bot(
-                token=bot_config.token,
-                default=DefaultBotProperties(parse_mode=ParseMode.HTML),
-            )
-            logger.info("Successfully created bot instance.")
-            return bot
-        logger.error("No token provided")
-        msg = "No token provided"
-        raise ValueError(msg)
+        bot = Bot(
+            token=bot_config.token or "",
+            default=DefaultBotProperties(parse_mode=ParseMode.HTML),
+        )
+        logger.info("Successfully created bot instance.")
+
     except TokenValidationError:
         logger.exception("Invalid token provided: %s", bot_config.token)
         raise
+
+    return bot
 
 
 async def main() -> None:

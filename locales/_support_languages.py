@@ -27,5 +27,8 @@ class LanguageList:
 
 
 support_languages: LanguageList = LanguageList(
-    languages=[Language("en", "🇬🇧 English"), Language("ru", "🇷🇺 Русский")],
+    languages=[
+        Language("en", "🇬🇧 English"),
+        Language("ru", "🇷🇺 Русский"),
+    ],
 )

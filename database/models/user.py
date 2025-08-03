@@ -25,7 +25,9 @@ class User(Base):
     last_name: Mapped[str | None] = mapped_column(String, default=None)
     language_code: Mapped[str | None] = mapped_column(String, default=None)
     state: Mapped[str | None] = mapped_column(String, default=None)
+
     search_queries: Mapped[int] = mapped_column(Integer, default=0)
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime,
         default=datetime.now,

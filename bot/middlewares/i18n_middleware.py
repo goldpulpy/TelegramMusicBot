@@ -12,7 +12,11 @@ if TYPE_CHECKING:
 class I18nMiddleware(BaseI18nMiddleware):
     """Custom i18n middleware for the bot."""
 
-    async def get_locale(self, event: TelegramObject, data: dict) -> str:  # noqa: ARG002
+    async def get_locale(
+        self,
+        event: TelegramObject,  # noqa: ARG002
+        data: dict,
+    ) -> str:
         """Get user locale."""
         user: User = data["user"]
         return user.language_code or "en"

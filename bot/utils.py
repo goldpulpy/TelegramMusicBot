@@ -12,7 +12,7 @@ async def load_tracks_from_db(search_id: int) -> list[Track]:
         id=int(search_id),
     )
 
-    if search is None or not hasattr(search, "tracks"):
+    if not search:
         return []
 
     return [Track.from_dict(track) for track in search.tracks]

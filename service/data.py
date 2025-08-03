@@ -18,7 +18,9 @@ class ServiceConfig:
 
     timeout: int = 30
     headers: dict = field(
-        default_factory=lambda: json.load(Path.open(headers_path)),
+        default_factory=lambda: json.load(
+            Path.open(headers_path, encoding="utf-8"),
+        ),
     )
 
 
