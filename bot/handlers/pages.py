@@ -1,10 +1,12 @@
 """Pages handler for the bot."""
+
 import logging
-from aiogram import types, Router, F
-from service.data import Track
+
+from aiogram import F, Router, types
+
 from bot.keyboards import inline
 from bot.utils import load_tracks_from_db
-
+from service.data import Track
 
 logger = logging.getLogger(__name__)
 
@@ -17,8 +19,8 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
 
         await callback.message.edit_reply_markup(
             reply_markup=inline.get_keyboard_of_tracks(
-                tracks, search_id, int(page)
-            )
+                tracks, search_id, int(page),
+            ),
         )
     except Exception as e:
         logger.error("Failed to send message: %s", e)
@@ -27,5 +29,5 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
 def register(router: Router) -> None:
     """Registers pages handler with the router."""
     router.callback_query.register(
-        pages_handler, F.data.startswith("track:page")
+        pages_handler, F.data.startswith("track:page"),
     )

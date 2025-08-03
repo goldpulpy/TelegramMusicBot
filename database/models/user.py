@@ -1,11 +1,14 @@
 """User database model."""
-from sqlalchemy import Column, String, BigInteger, DateTime, Integer, func
+
+from sqlalchemy import BigInteger, Column, DateTime, Integer, String, func
+
 from ..engine import Base
 
 
 class User(Base):
     """User model."""
-    __tablename__ = 'users'
+
+    __tablename__ = "users"
 
     id = Column(BigInteger, primary_key=True, autoincrement=True)
     username = Column(String, default=None)

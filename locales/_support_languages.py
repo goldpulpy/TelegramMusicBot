@@ -1,10 +1,12 @@
 """Supported languages."""
+
 from dataclasses import dataclass
 
 
 @dataclass
 class Language:
     """Supported language."""
+
     code: str
     name: str
 
@@ -12,6 +14,7 @@ class Language:
 @dataclass
 class LanguageList:
     """Supported languages."""
+
     languages: list[Language]
 
     def is_supported(self, code: str) -> bool:
@@ -20,8 +23,5 @@ class LanguageList:
 
 
 support_languages: LanguageList = LanguageList(
-    languages=[
-        Language('en', '🇬🇧 English'),
-        Language('ru', '🇷🇺 Русский')
-    ]
+    languages=[Language("en", "🇬🇧 English"), Language("ru", "🇷🇺 Русский")],
 )

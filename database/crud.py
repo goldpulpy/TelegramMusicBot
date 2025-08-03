@@ -1,16 +1,18 @@
 """CRUD operations."""
-import logging
-from typing import AsyncGenerator, Type, TypeVar
-from contextlib import asynccontextmanager
 
+import logging
+from collections.abc import AsyncGenerator
+from contextlib import asynccontextmanager
+from typing import Type, TypeVar
+
+from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import select
+
 from .engine import async_session_factory
 
-
-T = TypeVar('T')
+T = TypeVar("T")
 
 logger = logging.getLogger(__name__)
 
@@ -21,7 +23,7 @@ class CRUD:
     def __init__(
         self,
         model: Type[T],
-        session_factory: sessionmaker = async_session_factory
+        session_factory: sessionmaker = async_session_factory,
     ) -> None:
         """Initialize the CRUD class."""
         self.model = model
@@ -51,16 +53,14 @@ class CRUD:
                 return instance
             except SQLAlchemyError as e:
                 await session.rollback()
-                logger.error(
-                    f"Failed to create {self.model.__name__}: {e}"
-                )
+                logger.error(f"Failed to create {self.model.__name__}: {e}")
                 raise
 
     async def get(self, **kwargs) -> T:
         """Retrieve a record by any field."""
         async with self.get_session() as session:
             query = await session.execute(
-                select(self.model).filter_by(**kwargs)
+                select(self.model).filter_by(**kwargs),
             )
             instance = query.scalar_one_or_none()
             return instance
@@ -83,9 +83,7 @@ class CRUD:
                 return instance
             except SQLAlchemyError as e:
                 await session.rollback()
-                logger.error(
-                    f"Failed to update {self.model.__name__}: {e}"
-                )
+                logger.error(f"Failed to update {self.model.__name__}: {e}")
                 raise
 
     async def delete(self, instance: T) -> bool:
@@ -98,7 +96,5 @@ class CRUD:
                 return True
             except SQLAlchemyError as e:
                 await session.rollback()
-                logger.error(
-                    f"Failed to delete {self.model.__name__}: {e}"
-                )
+                logger.error(f"Failed to delete {self.model.__name__}: {e}")
                 raise

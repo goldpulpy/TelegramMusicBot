@@ -1,17 +1,20 @@
 """Language handler for the bot."""
+
 import logging
 from typing import Union
-from aiogram import types, Router, Bot, F
+
+from aiogram import Bot, F, Router, types
+from aiogram.filters import Command
 from aiogram.utils import i18n
 from aiogram.utils.i18n import gettext
-from aiogram.filters import Command
+
 from bot.filters import LanguageFilter
-from bot.keyboards import inline, command
+from bot.keyboards import command, inline
 from database.crud import CRUD
 from database.models import User
 from locales import support_languages
-from .menu import menu_handler
 
+from .menu import menu_handler
 
 logger = logging.getLogger(__name__)
 
@@ -38,9 +41,7 @@ async def language_handler(
 
 
 async def language_set_handler(
-    callback: types.CallbackQuery,
-    user: User,
-    bot: Bot
+    callback: types.CallbackQuery, user: User, bot: Bot,
 ) -> None:
     """Language set handler."""
     try:
@@ -62,5 +63,5 @@ def register(router: Router) -> None:
     router.message.register(language_handler, Command("language"))
     router.callback_query.register(language_handler, F.data == "language")
     router.callback_query.register(
-        language_set_handler, F.data.startswith("language:set:")
+        language_set_handler, F.data.startswith("language:set:"),
     )

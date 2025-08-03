@@ -1,4 +1,5 @@
 """Music service core module for downloading and searching music."""
+
 import logging
 import urllib.parse
 from typing import Optional
@@ -6,7 +7,7 @@ from typing import Optional
 import aiohttp
 from bs4 import BeautifulSoup
 
-from .data import Track, ServiceConfig
+from .data import ServiceConfig, Track
 from .exceptions import MusicServiceError
 
 logger = logging.getLogger(__name__)
@@ -14,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 class Music:
     """Service for searching and downloading music."""
+
     BASE_URL = "https://mp3wr.com"
     TRACK_DOWNLOAD_URL = "https://cdn.mp3wr.com"
 
@@ -22,7 +24,7 @@ class Music:
         self._config = config or ServiceConfig()
         self._session: Optional[aiohttp.ClientSession] = None
 
-    async def __aenter__(self) -> 'Music':
+    async def __aenter__(self) -> "Music":
         """Context manager entry point."""
         await self.connect()
         return self
@@ -34,9 +36,7 @@ class Music:
     async def connect(self) -> None:
         """Initialize HTTP session."""
         if self._session is None:
-            self._session = aiohttp.ClientSession(
-                headers=self._config.headers
-            )
+            self._session = aiohttp.ClientSession(headers=self._config.headers)
 
     async def disconnect(self) -> None:
         """Close HTTP session."""
@@ -65,20 +65,21 @@ class Music:
         return await self._parse_tracks(url)
 
     async def _parse_tracks(
-        self, url: str, is_search: bool = False
+        self, url: str, is_search: bool = False,
     ) -> list[Track]:
         """Parse tracks from the given URL."""
         try:
             async with self._session.get(
-                url, timeout=self._config.timeout
+                url, timeout=self._config.timeout,
             ) as response:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")
                 tracks = [
                     Track.from_element(track_data, index, is_search)
                     for index, track_data in enumerate(
-                        soup.find_all("item") if is_search
-                        else soup.find_all("li", class_="sarki-liste")
+                        soup.find_all("item")
+                        if is_search
+                        else soup.find_all("li", class_="sarki-liste"),
                     )
                 ]
 
@@ -86,10 +87,10 @@ class Music:
             return tracks
 
         except (aiohttp.ClientError, TimeoutError) as e:
-            raise MusicServiceError(f"Failed to search music: {str(e)}") from e
+            raise MusicServiceError(f"Failed to search music: {e!s}") from e
 
     async def _download_data(
-        self, url: str, resource_type: str, track_name: str
+        self, url: str, resource_type: str, track_name: str,
     ) -> bytes:
         """Generic method for downloading data."""
         MAX_SIZE = 50 * 1024 * 1024  # 50MB
@@ -101,21 +102,20 @@ class Music:
 
         try:
             async with self._session.get(
-                url,
-                timeout=self._config.timeout
+                url, timeout=self._config.timeout,
             ) as response:
                 response.raise_for_status()
                 content_length = response.content_length
 
                 if content_length and content_length > MAX_SIZE:
                     raise MusicServiceError(
-                        f"File too large: {content_length} bytes"
+                        f"File too large: {content_length} bytes",
                     )
 
                 return await response.read()
         except Exception as e:
             raise MusicServiceError(
-                f"Failed to download {resource_type}: {str(e)}"
+                f"Failed to download {resource_type}: {e!s}",
             ) from e
 
     async def get_audio_bytes(self, track: Track) -> bytes:

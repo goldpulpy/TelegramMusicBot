@@ -1,17 +1,19 @@
 """Menu handler for the bot."""
+
 import logging
 from typing import Union
-from aiogram import types, Router, F
-from aiogram.filters import CommandStart, Command
-from aiogram.utils.i18n import gettext
-from bot.keyboards import inline
 
+from aiogram import F, Router, types
+from aiogram.filters import Command, CommandStart
+from aiogram.utils.i18n import gettext
+
+from bot.keyboards import inline
 
 logger = logging.getLogger(__name__)
 
 
 async def menu_handler(
-    event: Union[types.Message, types.CallbackQuery]
+    event: Union[types.Message, types.CallbackQuery],
 ) -> None:
     """Menu handler."""
     try:

@@ -1,4 +1,5 @@
 """Utils for the bot."""
+
 from database.crud import CRUD
 from database.models import SearchHistory
 from service.data import Track

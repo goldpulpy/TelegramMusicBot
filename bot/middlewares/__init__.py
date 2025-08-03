@@ -1,6 +1,8 @@
 """Middlewares for the bot."""
+
 from aiogram import Dispatcher
 from aiogram.utils.i18n import I18n
+
 from .auth_middleware import AuthMiddleware
 from .i18n_middleware import I18nMiddleware
 

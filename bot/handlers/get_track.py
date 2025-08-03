@@ -1,19 +1,19 @@
 """Get track handler for the bot."""
+
 import logging
-from aiogram import types, Router, F, Bot
+
+from aiogram import Bot, F, Router, types
 from aiogram.types import BufferedInputFile
 from aiogram.utils.i18n import gettext
-from service import Music, Track
-from bot.utils import load_tracks_from_db
 
+from bot.utils import load_tracks_from_db
+from service import Music, Track
 
 logger = logging.getLogger(__name__)
 
 
 async def send_track(
-    callback: types.CallbackQuery,
-    bot: Bot,
-    track: Track
+    callback: types.CallbackQuery, bot: Bot, track: Track,
 ) -> None:
     """Send track."""
     try:
@@ -25,7 +25,7 @@ async def send_track(
 
             audio_file = BufferedInputFile(audio_bytes, filename=track.name)
             thumbnail_file = BufferedInputFile(
-                thumbnail_bytes, filename=track.name
+                thumbnail_bytes, filename=track.name,
             )
 
         await callback.message.answer_audio(
@@ -54,13 +54,13 @@ async def get_track_handler(callback: types.CallbackQuery, bot: Bot) -> None:
 
 
 async def get_all_from_page_handler(
-    callback: types.CallbackQuery, bot: Bot
+    callback: types.CallbackQuery, bot: Bot,
 ) -> None:
     """Get all tracks from page handler."""
     try:
         _, _, search_id, start_indx, end_indx = callback.data.split(":")
         all_tracks: list[Track] = await load_tracks_from_db(search_id)
-        page_tracks = all_tracks[int(start_indx):int(end_indx)]
+        page_tracks = all_tracks[int(start_indx) : int(end_indx)]
         await callback.answer(gettext("track_sending"))
         for track in page_tracks:
             await send_track(callback, bot, track)
@@ -72,8 +72,8 @@ async def get_all_from_page_handler(
 def register(router: Router) -> None:
     """Registers get track handler with the router."""
     router.callback_query.register(
-        get_track_handler, F.data.startswith("track:get:")
+        get_track_handler, F.data.startswith("track:get:"),
     )
     router.callback_query.register(
-        get_all_from_page_handler, F.data.startswith("track:all:")
+        get_all_from_page_handler, F.data.startswith("track:all:"),
     )

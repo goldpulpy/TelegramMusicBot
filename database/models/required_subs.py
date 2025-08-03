@@ -1,5 +1,7 @@
 """Required subscriptions database model."""
-from sqlalchemy import Column, String, DateTime, Integer, BigInteger, func
+
+from sqlalchemy import BigInteger, Column, DateTime, Integer, String, func
+
 from ..engine import Base
 
 

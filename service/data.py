@@ -1,7 +1,9 @@
 """Data classes"""
+
 import json
 import os
 from dataclasses import dataclass, field
+
 from bs4 import BeautifulSoup
 
 headers_path = os.path.join(os.path.dirname(__file__), "headers.json")
@@ -10,9 +12,10 @@ headers_path = os.path.join(os.path.dirname(__file__), "headers.json")
 @dataclass
 class ServiceConfig:
     """Configuration for music service."""
+
     timeout: int = 30
     headers: dict = field(
-        default_factory=lambda: json.load(open(headers_path))
+        default_factory=lambda: json.load(open(headers_path)),
     )
 
 
@@ -39,7 +42,7 @@ class Track:
         performer, title = full_name.split(" - ", 1)
         audio_url = element.find(class_="right").get("data-id")
         thumbnail_element = element.find(
-            class_="little_thumb" if is_search else "resim_thumb"
+            class_="little_thumb" if is_search else "resim_thumb",
         )
         thumbnail_url = thumbnail_element.find("img").get("data-src")
         return cls(

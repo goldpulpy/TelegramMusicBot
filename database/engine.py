@@ -1,10 +1,12 @@
 """Database engine."""
-import logging
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker
-from configs import db_config
 
+import logging
+
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
+
+from configs import db_config
 
 logger = logging.getLogger(__name__)
 

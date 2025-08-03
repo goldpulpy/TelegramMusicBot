@@ -1,11 +1,14 @@
 """Subscription required handler for the bot."""
+
 import logging
-from aiogram import types, Router, F, Bot
+
+from aiogram import Bot, F, Router, types
 from aiogram.utils.i18n import gettext
-from bot.keyboards import inline
+
 from bot.filters import NotSubbedFilter
-from database.models import RequiredSubscriptions, User
+from bot.keyboards import inline
 from database.crud import CRUD
+from database.models import RequiredSubscriptions, User
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +31,9 @@ async def sub_required_handler(
 
 
 async def sub_check_handler(
-    callback: types.CallbackQuery, user: User, bot: Bot,
+    callback: types.CallbackQuery,
+    user: User,
+    bot: Bot,
 ) -> None:
     """Subscription check handler."""
     sub_check = NotSubbedFilter()
