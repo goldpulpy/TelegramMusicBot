@@ -23,16 +23,17 @@ logger = logging.getLogger(__name__)
 async def create_bot() -> Bot:
     """Create and return a Bot instance."""
     try:
-        bot = Bot(
-            token=bot_config.token,
-            default_parse_mode=ParseMode.HTML,
-        )
-        logger.info("Successfully created bot instance.")
+        if bot_config.token:
+            bot = Bot(
+                token=bot_config.token,
+                default_parse_mode=ParseMode.HTML,
+            )
+            logger.info("Successfully created bot instance.")
     except TokenValidationError:
         logger.exception("Invalid token provided: %s", bot_config.token)
         raise
-    else:
-        return bot
+
+    return bot
 
 
 async def main() -> None:

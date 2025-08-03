@@ -48,14 +48,16 @@ async def language_set_handler(
 ) -> None:
     """Language set handler."""
     try:
-        language_code = callback.data.split(":")[-1]
+        if callback.data:
+            language_code = callback.data.split(":")[-1]
 
-        user_crud = CRUD(User)
-        await user_crud.update(user, language_code=language_code)
-        i18n.get_i18n().ctx_locale.set(language_code)
+            user_crud = CRUD(User)
+            await user_crud.update(user, language_code=language_code)
+            i18n.get_i18n().ctx_locale.set(language_code)
 
-        await bot.set_my_commands(command.get_commands(gettext))
-        await menu_handler(callback)
+            await bot.set_my_commands(command.get_commands(gettext))
+            await menu_handler(callback)
+
     except Exception:
         logger.exception("Failed to set language")
 

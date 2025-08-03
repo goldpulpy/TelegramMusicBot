@@ -32,18 +32,7 @@ class NotSubbedFilter(Filter):
         user: User,
         bot: Bot,
     ) -> bool:
-        """Check if the user is not subscribed to any required channels.
-
-        Args:
-            update: Update object.
-            user: User object.
-            bot: Bot object.
-
-        Returns:
-            True if user is NOT subscribed to ANY required channel.
-            False if user is subscribed to ALL required channels.
-
-        """
+        """Check if the user is not subscribed to any required channels."""
         chats = await CRUD(RequiredSubscriptions).get_all()
 
         if not chats:
@@ -60,18 +49,7 @@ class NotSubbedFilter(Filter):
         user: User,
         bot: Bot,
     ) -> bool:
-        """Check if the user is subscribed to the channel.
-
-        Args:
-            sub: RequiredSubscriptions object.
-            user: User object.
-            bot: Bot object.
-
-        Returns:
-            True if user is NOT subscribed.
-            False if user is subscribed or if channel is not accessible.
-
-        """
+        """Check if the user is subscribed to the channel."""
         try:
             chat = await bot.get_chat(sub.chat_id)
         except Exception:
@@ -82,5 +60,5 @@ class NotSubbedFilter(Filter):
             member = await chat.get_member(user.id)
         except Exception:  # noqa: BLE001
             return True
-        else:
-            return member.status not in self.ALLOWED_STATUSES
+
+        return member.status not in self.ALLOWED_STATUSES

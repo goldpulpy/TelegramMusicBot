@@ -90,6 +90,9 @@ class Music:
     ) -> list[Track]:
         """Parse tracks from the given URL."""
         try:
+            if not self._session:
+                await self.connect()
+
             async with self._session.get(
                 url,
                 timeout=self._config.timeout,
@@ -113,8 +116,7 @@ class Music:
             msg = f"Failed to search music: {e!s}"
             raise MusicServiceError(msg) from e
 
-        else:
-            return tracks
+        return tracks
 
     def _raise_file_too_large_error(self, content_length: int) -> None:
         """Raise an error for files that are too large."""

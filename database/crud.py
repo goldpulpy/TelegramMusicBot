@@ -57,8 +57,7 @@ class CRUD:
                     self.model.__name__,
                 )
                 raise
-            else:
-                return instance
+            return instance
 
     async def get(self, **kwargs: Any) -> T:  # noqa: ANN401
         """Retrieve a record by any field."""
@@ -90,8 +89,8 @@ class CRUD:
                     self.model.__name__,
                 )
                 raise
-            else:
-                return instance
+
+            return instance
 
     async def delete(self, instance: T) -> bool:
         """Delete a record from the database."""
@@ -106,5 +105,4 @@ class CRUD:
                     self.model.__name__,
                 )
                 raise
-            else:
-                return True
+            return True

@@ -1,6 +1,11 @@
 """User database model."""
 
-from sqlalchemy import BigInteger, Column, DateTime, Integer, String, func
+from __future__ import annotations
+
+from datetime import datetime
+
+from sqlalchemy import BigInteger, DateTime, Integer, String
+from sqlalchemy.orm import Mapped, mapped_column
 
 from database.engine import Base
 
@@ -10,12 +15,18 @@ class User(Base):
 
     __tablename__ = "users"
 
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    username = Column(String, default=None)
-    first_name = Column(String, default=None)
-    last_name = Column(String, default=None)
-    language_code = Column(String, default=None)
-    state = Column(String, default=None)
-    search_queries = Column(Integer, default=0)
-    created_at = Column(DateTime, default=func.now())
-    updated_at = Column(DateTime, default=func.now())
+    id: Mapped[int] = mapped_column(
+        BigInteger, primary_key=True, autoincrement=True
+    )
+    username: Mapped[str | None] = mapped_column(String, default=None)
+    first_name: Mapped[str | None] = mapped_column(String, default=None)
+    last_name: Mapped[str | None] = mapped_column(String, default=None)
+    language_code: Mapped[str | None] = mapped_column(String, default=None)
+    state: Mapped[str | None] = mapped_column(String, default=None)
+    search_queries: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.now
+    )
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.now
+    )

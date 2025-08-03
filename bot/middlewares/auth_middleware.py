@@ -1,12 +1,13 @@
 """Auth middleware module for the bot."""
 
 import logging
+import time
 from collections.abc import Awaitable
+from datetime import datetime
 from typing import Any, Callable
 
 from aiogram import BaseMiddleware
 from aiogram.types import Update
-from sqlalchemy import func
 
 from database.crud import CRUD
 from database.models import User
@@ -68,7 +69,7 @@ class AuthMiddleware(BaseMiddleware):
             logger.info("User %s registered in the database.", user.id)
 
         else:
-            user_data["updated_at"] = func.now()
+            user_data["updated_at"] = datetime.now(time.tzname)
             db_user = await user_crud.update(db_user, **user_data)
             logger.info("User %s updated in the database.", user.id)
 
