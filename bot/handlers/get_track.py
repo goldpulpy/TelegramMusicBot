@@ -20,7 +20,7 @@ async def send_track(
     """Send track."""
     try:
         if callback.message is None or callback.message.chat is None:
-            await callback.answer("Cannot access chat")
+            await callback.answer(gettext("cannot_access_chat"))
             return
 
         await bot.send_chat_action(callback.message.chat.id, "upload_document")
@@ -60,7 +60,7 @@ async def get_track_handler(callback: types.CallbackQuery, bot: Bot) -> None:
     """Get track handler."""
     try:
         if callback.data is None:
-            await callback.answer("Invalid data")
+            await callback.answer(gettext("invalid_data"))
             return
 
         _, _, search_id_str, index = callback.data.split(":")
@@ -81,7 +81,7 @@ async def get_all_from_page_handler(
     """Get all tracks from page handler."""
     try:
         if callback.data is None:
-            await callback.answer("Invalid data")
+            await callback.answer(gettext("invalid_data"))
             return
 
         _, _, search_id_str, start_indx, end_indx = callback.data.split(":")

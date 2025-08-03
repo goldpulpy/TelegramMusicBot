@@ -17,7 +17,7 @@ async def faq_handler(callback: types.CallbackQuery) -> None:
             callback.message,
             types.InaccessibleMessage,
         ):
-            await callback.answer("Cannot edit message")
+            await callback.answer(gettext("cannot_edit_message"))
             return
 
         await callback.message.edit_text(

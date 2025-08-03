@@ -26,7 +26,7 @@ async def menu_handler(
                 event.message,
                 types.InaccessibleMessage,
             ):
-                await event.answer("Cannot edit message")
+                await event.answer(gettext("cannot_edit_message"))
                 return
 
             await event.message.edit_text(text, reply_markup=keyboard)

@@ -33,7 +33,7 @@ async def sub_required_handler(
                 event.message,
                 types.InaccessibleMessage,
             ):
-                await event.answer("Cannot send message")
+                await event.answer(gettext("cannot_send_message"))
                 return
 
             await event.message.answer(text, reply_markup=keyboard)
@@ -52,7 +52,7 @@ async def sub_check_handler(
         callback.message,
         types.InaccessibleMessage,
     ):
-        await callback.answer("Cannot send message")
+        await callback.answer(gettext("cannot_send_message"))
         return
 
     if await sub_check(callback, user, bot):

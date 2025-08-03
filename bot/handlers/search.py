@@ -76,7 +76,7 @@ async def track_lists_handler(
 ) -> None:
     """Handle the track lists."""
     if callback.data is None:
-        await callback.answer("Invalid data")
+        await callback.answer(gettext("invalid_data"))
         return
 
     _, _, list_type = callback.data.split(":")
@@ -87,7 +87,7 @@ async def track_lists_handler(
         callback.message,
         types.InaccessibleMessage,
     ):
-        await callback.answer("Cannot send message")
+        await callback.answer(gettext("cannot_send_message"))
         return
 
     await callback.message.answer(

@@ -5,6 +5,7 @@ from typing import TYPE_CHECKING
 
 from aiogram import F, Router, types
 from aiogram.exceptions import TelegramBadRequest
+from aiogram.utils.i18n import gettext
 
 from bot.keyboards import inline
 from bot.utils import load_tracks_from_db
@@ -19,12 +20,12 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
     """Handle the pages navigation."""
     try:
         if not callback.data:
-            await callback.answer("Invalid data")
+            await callback.answer(gettext("invalid_data"))
             return
 
         data_parts = callback.data.split(":")
         if len(data_parts) < 4:  # noqa: PLR2004
-            await callback.answer("Invalid data format")
+            await callback.answer(gettext("invalid_data"))
             return
 
         _, _, search_id, page = data_parts
@@ -34,7 +35,7 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
             callback.message,
             types.InaccessibleMessage,
         ):
-            await callback.answer("Cannot edit message")
+            await callback.answer(gettext("cannot_edit_message"))
             return
 
         await callback.message.edit_reply_markup(
@@ -45,10 +46,10 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
             ),
         )
     except TelegramBadRequest:
-        await callback.answer("Cannot edit message, please retry")
+        await callback.answer(gettext("cannot_edit_message"))
     except Exception:
         logger.exception("Failed to handle pages navigation")
-        await callback.answer("Error occurred")
+        await callback.answer(gettext("error_occurred"))
 
 
 def register(router: Router) -> None:
