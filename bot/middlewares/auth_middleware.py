@@ -68,7 +68,7 @@ class AuthMiddleware(BaseMiddleware):
             logger.info("User %s registered in the database.", user.id)
 
         else:
-            user_data["updated_at"] = datetime.now().astimezone()
+            user_data["updated_at"] = datetime.now()
             db_user = await user_crud.update(db_user, **user_data)
             logger.info("User %s updated in the database.", user.id)
 
