@@ -36,6 +36,10 @@ async def update_search(
 async def search_handler(message: types.Message, user: User) -> None:
     """Handle the search."""
     try:
+        if message.text is None:
+            await message.answer(gettext("search_query_error"))
+            return
+
         keyword = message.text.strip()
         if not keyword or len(keyword) > MAX_KEYWORD_LENGTH:
             await message.answer(gettext("search_query_error"))
@@ -71,9 +75,18 @@ async def track_lists_handler(
     user: User,
 ) -> None:
     """Handle the track lists."""
+    if callback.data is None:
+        await callback.answer("Invalid data")
+        return
+
     _, _, list_type = callback.data.split(":")
     tracks = await get_track_list(list_type)
     search = await update_search(user, list_type, tracks)
+
+    if callback.message is None:
+        await callback.answer("Cannot send message")
+        return
+
     await callback.message.answer(
         gettext(list_type),
         reply_markup=inline.get_keyboard_of_tracks(tracks, search.id),

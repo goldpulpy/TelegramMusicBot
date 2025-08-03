@@ -7,6 +7,7 @@ import urllib.parse
 from typing import TYPE_CHECKING, Literal
 
 import aiohttp
+from aiohttp import ClientTimeout
 from bs4 import BeautifulSoup
 from typing_extensions import Self
 
@@ -92,10 +93,13 @@ class Music:
         try:
             if not self._session:
                 await self.connect()
+                if not self._session:
+                    msg = "Failed to initialize session"
+                    raise MusicServiceError(msg)
 
             async with self._session.get(
                 url,
-                timeout=self._config.timeout,
+                timeout=ClientTimeout(total=self._config.timeout),
             ) as response:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")
@@ -134,13 +138,16 @@ class Music:
 
         if not self._session:
             await self.connect()
+            if not self._session:
+                msg = "Failed to initialize session"
+                raise MusicServiceError(msg)
 
         logger.info("Downloading %s for track: %s", resource_type, track_name)
 
         try:
             async with self._session.get(
                 url,
-                timeout=self._config.timeout,
+                timeout=ClientTimeout(total=self._config.timeout),
             ) as response:
                 response.raise_for_status()
                 content_length = response.content_length

@@ -20,13 +20,19 @@ async def sub_required_handler(
 ) -> None:
     """Subscription required handler."""
     try:
-        required_chats = await CRUD(RequiredSubscriptions).get_all()
+        required_chats: list[RequiredSubscriptions] = await CRUD(
+            RequiredSubscriptions,
+        ).get_all()
         text = gettext("not_subscribed")
         keyboard = inline.get_subscribe_keyboard(gettext, required_chats)
 
         if isinstance(event, types.Message):
             await event.answer(text, reply_markup=keyboard)
         else:
+            if event.message is None:
+                await event.answer("Cannot send message")
+                return
+
             await event.message.answer(text, reply_markup=keyboard)
     except Exception:
         logger.exception("Failed to send message")
@@ -41,8 +47,16 @@ async def sub_check_handler(
     sub_check = NotSubbedFilter()
 
     if await sub_check(callback, user, bot):
+        if callback.message is None:
+            await callback.answer("Cannot send message")
+            return
+
         await callback.message.answer(gettext("not_subscribed"))
     else:
+        if callback.message is None:
+            await callback.answer("Cannot delete message")
+            return
+
         await callback.message.delete()
 
 

@@ -1,13 +1,12 @@
 """Auth middleware module for the bot."""
 
 import logging
-import time
 from collections.abc import Awaitable
 from datetime import datetime
 from typing import Any, Callable
 
 from aiogram import BaseMiddleware
-from aiogram.types import Update
+from aiogram.types import TelegramObject
 
 from database.crud import CRUD
 from database.models import User
@@ -20,8 +19,8 @@ class AuthMiddleware(BaseMiddleware):
 
     async def __call__(
         self,
-        handler: Callable[[Update, dict[str, Any]], Awaitable[Any]],
-        event: Update,
+        handler: Callable[[TelegramObject, dict[str, Any]], Awaitable[Any]],
+        event: TelegramObject,
         data: dict[str, Any],
     ) -> Awaitable[Any]:
         """Intercept incoming updates, process them and call the next."""
@@ -61,7 +60,7 @@ class AuthMiddleware(BaseMiddleware):
         user_data: dict[str, Any],
     ) -> User:
         """Get existing user or create new one."""
-        db_user = await user_crud.get(id=user.id)
+        db_user: User | None = await user_crud.get(id=user.id)
 
         if not db_user:
             user_data["language_code"] = user.language_code
@@ -69,7 +68,7 @@ class AuthMiddleware(BaseMiddleware):
             logger.info("User %s registered in the database.", user.id)
 
         else:
-            user_data["updated_at"] = datetime.now(time.tzname)
+            user_data["updated_at"] = datetime.now().astimezone()
             db_user = await user_crud.update(db_user, **user_data)
             logger.info("User %s updated in the database.", user.id)
 

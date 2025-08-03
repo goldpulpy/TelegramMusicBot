@@ -33,7 +33,9 @@ class NotSubbedFilter(Filter):
         bot: Bot,
     ) -> bool:
         """Check if the user is not subscribed to any required channels."""
-        chats = await CRUD(RequiredSubscriptions).get_all()
+        chats: list[RequiredSubscriptions] = await CRUD(
+            RequiredSubscriptions,
+        ).get_all()
 
         if not chats:
             return False

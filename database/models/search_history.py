@@ -23,11 +23,14 @@ class SearchHistory(Base):
     __tablename__ = "search_history"
 
     id: Mapped[int] = mapped_column(
-        Integer, primary_key=True, autoincrement=True
+        Integer,
+        primary_key=True,
+        autoincrement=True,
     )
     user_id: Mapped[int] = mapped_column(BigInteger, ForeignKey("users.id"))
     keyword: Mapped[str | None] = mapped_column(String, default=None)
     tracks: Mapped[list[dict[str, str]]] = mapped_column(JSONB, default=[])
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.now
+        DateTime,
+        default=datetime.now,
     )

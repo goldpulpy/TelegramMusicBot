@@ -19,6 +19,10 @@ async def send_track(
 ) -> None:
     """Send track."""
     try:
+        if callback.message is None or callback.message.chat is None:
+            await callback.answer("Cannot access chat")
+            return
+
         await bot.send_chat_action(callback.message.chat.id, "upload_document")
 
         async with Music() as service:
@@ -33,6 +37,10 @@ async def send_track(
 
         me = await bot.get_me()
 
+        if callback.message is None:
+            await callback.answer("Cannot send message")
+            return
+
         await callback.message.answer_audio(
             audio_file,
             title=track.title,
@@ -41,14 +49,22 @@ async def send_track(
             thumbnail=thumbnail_file,
         )
     except Exception:
-        await callback.message.answer(gettext("send_track_error"))
+        if callback.message is not None:
+            await callback.message.answer(gettext("send_track_error"))
+        else:
+            await callback.answer(gettext("send_track_error"))
         logger.exception("Failed to send track")
 
 
 async def get_track_handler(callback: types.CallbackQuery, bot: Bot) -> None:
     """Get track handler."""
     try:
-        _, _, search_id, index = callback.data.split(":")
+        if callback.data is None:
+            await callback.answer("Invalid data")
+            return
+
+        _, _, search_id_str, index = callback.data.split(":")
+        search_id = int(search_id_str)
         tracks: list[Track] = await load_tracks_from_db(search_id)
         track: Track = tracks[int(index)]
         await callback.answer(gettext("track_sending"))
@@ -64,7 +80,12 @@ async def get_all_from_page_handler(
 ) -> None:
     """Get all tracks from page handler."""
     try:
-        _, _, search_id, start_indx, end_indx = callback.data.split(":")
+        if callback.data is None:
+            await callback.answer("Invalid data")
+            return
+
+        _, _, search_id_str, start_indx, end_indx = callback.data.split(":")
+        search_id = int(search_id_str)
         all_tracks: list[Track] = await load_tracks_from_db(search_id)
         page_tracks = all_tracks[int(start_indx) : int(end_indx)]
         await callback.answer(gettext("track_sending"))

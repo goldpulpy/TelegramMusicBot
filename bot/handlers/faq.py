@@ -13,6 +13,10 @@ logger = logging.getLogger(__name__)
 async def faq_handler(callback: types.CallbackQuery) -> None:
     """FAQ handler."""
     try:
+        if callback.message is None:
+            await callback.answer("Cannot edit message")
+            return
+
         await callback.message.edit_text(
             gettext("faq"),
             reply_markup=inline.get_back_keyboard(gettext, "menu"),

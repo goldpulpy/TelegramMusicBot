@@ -4,6 +4,7 @@ import asyncio
 import logging
 
 from aiogram import Bot, Dispatcher
+from aiogram.client.bot import DefaultBotProperties
 from aiogram.enums import ParseMode
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.utils.i18n import I18n
@@ -26,14 +27,16 @@ async def create_bot() -> Bot:
         if bot_config.token:
             bot = Bot(
                 token=bot_config.token,
-                default_parse_mode=ParseMode.HTML,
+                default=DefaultBotProperties(parse_mode=ParseMode.HTML),
             )
             logger.info("Successfully created bot instance.")
+            return bot
+        logger.error("No token provided")
+        msg = "No token provided"
+        raise ValueError(msg)
     except TokenValidationError:
         logger.exception("Invalid token provided: %s", bot_config.token)
         raise
-
-    return bot
 
 
 async def main() -> None:

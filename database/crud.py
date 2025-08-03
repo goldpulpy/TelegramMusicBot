@@ -1,23 +1,29 @@
-"""CRUD operations."""
+"""Database CRUD operations."""
+
+from __future__ import annotations
 
 import logging
-from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
-from typing import Any, TypeVar
+from typing import TYPE_CHECKING, Any, Generic, TypeVar
 
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.orm import sessionmaker
 
 from .engine import async_session_factory
+
+if TYPE_CHECKING:
+    from collections.abc import AsyncGenerator
+
+    from sqlalchemy.ext.asyncio import AsyncSession
+    from sqlalchemy.orm import sessionmaker
+
 
 T = TypeVar("T")
 
 logger = logging.getLogger(__name__)
 
 
-class CRUD:
+class CRUD(Generic[T]):
     """Generic class to handle CRUD operations for any model."""
 
     def __init__(
@@ -59,7 +65,7 @@ class CRUD:
                 raise
             return instance
 
-    async def get(self, **kwargs: Any) -> T:  # noqa: ANN401
+    async def get(self, **kwargs: Any) -> T | None:  # noqa: ANN401
         """Retrieve a record by any field."""
         async with self.get_session() as session:
             query = await session.execute(
@@ -71,7 +77,7 @@ class CRUD:
         """Get all records."""
         async with self.get_session() as session:
             query = await session.execute(select(self.model))
-            return query.scalars().all()
+            return list(query.scalars().all())
 
     async def update(self, instance: T, **kwargs: Any) -> T:  # noqa: ANN401
         """Update a record's information."""

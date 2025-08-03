@@ -23,4 +23,7 @@ class LanguageFilter(Filter):
         user: User,
     ) -> bool:
         """Check if the user's language matches the specified language."""
-        return not support_languages.is_supported(user.language_code)
+        language_code = user.language_code
+        if language_code is None:
+            return True
+        return not support_languages.is_supported(language_code)

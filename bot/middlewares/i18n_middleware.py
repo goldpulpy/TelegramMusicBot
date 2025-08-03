@@ -2,7 +2,7 @@
 
 from typing import TYPE_CHECKING
 
-from aiogram.types import Message
+from aiogram.types import TelegramObject
 from aiogram.utils.i18n.middleware import I18nMiddleware as BaseI18nMiddleware
 
 if TYPE_CHECKING:
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
 class I18nMiddleware(BaseI18nMiddleware):
     """Custom i18n middleware for the bot."""
 
-    async def get_locale(self, _: Message, data: dict) -> str:
+    async def get_locale(self, event: TelegramObject, data: dict) -> str:  # noqa: ARG002
         """Get user locale."""
         user: User = data["user"]
-        return user.language_code
+        return user.language_code or "en"

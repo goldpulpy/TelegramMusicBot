@@ -22,6 +22,10 @@ async def menu_handler(
         keyboard = inline.get_menu_keyboard(gettext)
 
         if isinstance(event, types.CallbackQuery):
+            if event.message is None:
+                await event.answer("Cannot edit message")
+                return
+
             await event.message.edit_text(text, reply_markup=keyboard)
         else:
             await event.answer(text, reply_markup=keyboard)

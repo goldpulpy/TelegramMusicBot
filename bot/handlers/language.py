@@ -26,14 +26,20 @@ async def language_handler(
 ) -> None:
     """Language handler."""
     try:
+        language_code = user.language_code
         text = (
             gettext("language_choose")
-            if support_languages.is_supported(user.language_code)
+            if language_code is not None
+            and support_languages.is_supported(language_code)
             else "🌎 Choose language:"
         )
         keyboard = inline.language_keyboard
 
         if isinstance(event, types.CallbackQuery):
+            if event.message is None:
+                await event.answer("Cannot edit message")
+                return
+
             await event.message.edit_text(text, reply_markup=keyboard)
         else:
             await event.answer(text, reply_markup=keyboard)

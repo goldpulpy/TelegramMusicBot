@@ -16,7 +16,9 @@ class User(Base):
     __tablename__ = "users"
 
     id: Mapped[int] = mapped_column(
-        BigInteger, primary_key=True, autoincrement=True
+        BigInteger,
+        primary_key=True,
+        autoincrement=True,
     )
     username: Mapped[str | None] = mapped_column(String, default=None)
     first_name: Mapped[str | None] = mapped_column(String, default=None)
@@ -25,8 +27,10 @@ class User(Base):
     state: Mapped[str | None] = mapped_column(String, default=None)
     search_queries: Mapped[int] = mapped_column(Integer, default=0)
     created_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.now
+        DateTime,
+        default=datetime.now,
     )
     updated_at: Mapped[datetime] = mapped_column(
-        DateTime, default=datetime.now
+        DateTime,
+        default=datetime.now,
     )
