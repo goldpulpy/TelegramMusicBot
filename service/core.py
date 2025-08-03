@@ -59,7 +59,8 @@ class Music:
     async def search(self, keyword: str) -> list[Track]:
         """Search for music by keyword."""
         if not self._session:
-            await self.connect()
+            msg = "Failed to initialize session"
+            raise MusicServiceError(msg)
 
         url = urllib.parse.urljoin(self.BASE_URL, f"search/{keyword}")
         logger.info("Searching music with keyword: %s", keyword)
@@ -92,10 +93,8 @@ class Music:
         """Parse tracks from the given URL."""
         try:
             if not self._session:
-                await self.connect()
-                if not self._session:
-                    msg = "Failed to initialize session"
-                    raise MusicServiceError(msg)
+                msg = "Failed to initialize session"
+                raise MusicServiceError(msg)
 
             async with self._session.get(
                 url,
@@ -137,10 +136,8 @@ class Music:
         max_size = 50 * 1024 * 1024  # 50MB
 
         if not self._session:
-            await self.connect()
-            if not self._session:
-                msg = "Failed to initialize session"
-                raise MusicServiceError(msg)
+            msg = "Failed to initialize session"
+            raise MusicServiceError(msg)
 
         logger.info("Downloading %s for track: %s", resource_type, track_name)
 
