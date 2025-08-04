@@ -21,14 +21,19 @@ async def menu_handler(
         text = gettext("menu")
         keyboard = inline.get_menu_keyboard(gettext)
 
-        if isinstance(event, types.Message):
-            await event.answer(text, reply_markup=keyboard)
+        match event:
+            case types.Message():
+                await event.answer(text, reply_markup=keyboard)
 
-        elif isinstance(event.message, types.Message):
-            await event.message.edit_text(text, reply_markup=keyboard)
+            case types.CallbackQuery() if event.message:
+                if not isinstance(event.message, types.Message):
+                    await event.answer(gettext("cannot_edit_message"))
+                    return
 
-        else:
-            await event.answer(gettext("cannot_send_message"))
+                await event.message.edit_text(text, reply_markup=keyboard)
+
+            case _:
+                await event.answer(gettext("cannot_send_message"))
 
     except Exception:
         logger.exception("Failed to handle menu event")

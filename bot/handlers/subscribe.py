@@ -26,14 +26,15 @@ async def sub_required_handler(
         text = gettext("not_subscribed")
         keyboard = inline.get_subscribe_keyboard(gettext, required_chats)
 
-        if isinstance(event, types.Message):
-            await event.answer(text, reply_markup=keyboard)
+        match event:
+            case types.Message():
+                await event.answer(text, reply_markup=keyboard)
 
-        elif isinstance(event.message, types.Message):
-            await event.message.answer(text, reply_markup=keyboard)
+            case types.CallbackQuery() if event.message:
+                await event.message.answer(text, reply_markup=keyboard)
 
-        else:
-            await event.answer(gettext("cannot_send_message"))
+            case _:
+                await event.answer(gettext("cannot_send_message"))
 
     except Exception:
         logger.exception("Failed to send message")
@@ -57,7 +58,7 @@ async def sub_check_handler(
 
 
 def register(router: Router) -> None:
-    """Register FAQ handler with the router."""
+    """Register subscription check handler with the router."""
     router.callback_query.register(sub_check_handler, F.data == "sub_check")
     router.callback_query.register(sub_required_handler, NotSubbedFilter())
     router.message.register(sub_required_handler, NotSubbedFilter())
