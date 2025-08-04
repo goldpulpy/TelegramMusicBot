@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import logging
+import re
 from typing import TYPE_CHECKING
 
 import aiohttp
@@ -154,8 +155,10 @@ class Music:
         return await self._download_data(track.audio_url, "audio", track.name)
 
     def build_search_query(self, keyword: str) -> str:
-        """Build search query."""
-        query = keyword.strip().lower().replace(" ", "-")
+        """Build search query with cleaned keyword."""
+        cleaned = re.sub(r"[^\w\s]", "", keyword)
+        query = cleaned.strip().lower().replace(" ", "-")
+
         try:
             subdomain = query.encode("idna").decode("ascii")
         except UnicodeError:

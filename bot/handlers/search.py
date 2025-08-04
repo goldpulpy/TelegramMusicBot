@@ -82,17 +82,13 @@ async def track_lists_handler(
     tracks = await get_track_list(list_type)
     search = await update_search(user, list_type, tracks)
 
-    if callback.message is None or isinstance(
-        callback.message,
-        types.InaccessibleMessage,
-    ):
+    if isinstance(callback.message, types.Message):
+        await callback.message.answer(
+            gettext(list_type),
+            reply_markup=inline.get_keyboard_of_tracks(tracks, search.id),
+        )
+    else:
         await callback.answer(gettext("cannot_send_message"))
-        return
-
-    await callback.message.answer(
-        gettext(list_type),
-        reply_markup=inline.get_keyboard_of_tracks(tracks, search.id),
-    )
 
 
 def register(router: Router) -> None:

@@ -56,7 +56,7 @@ class Track:
         track_name_element = element.find(class_="playlist-name-title")
         if artist_name_element is None or track_name_element is None:
             msg = "Could not find artist name element"
-            raise TypeError(msg)
+            raise ValueError(msg)
 
         performer = artist_name_element.text.strip()
         title = track_name_element.text.strip()

@@ -33,7 +33,7 @@ async def send_track(
         me = await bot.get_me()
 
         if callback.message is None:
-            await callback.answer("Cannot send message")
+            await callback.answer(gettext("cannot_send_message"))
             return
 
         await callback.message.answer_audio(

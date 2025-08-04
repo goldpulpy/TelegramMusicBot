@@ -35,17 +35,15 @@ async def language_handler(
         )
         keyboard = inline.language_keyboard
 
-        if isinstance(event, types.CallbackQuery):
-            if event.message is None or isinstance(
-                event.message,
-                types.InaccessibleMessage,
-            ):
-                await event.answer(gettext("cannot_edit_message"))
-                return
-
-            await event.message.edit_text(text, reply_markup=keyboard)
-        else:
+        if isinstance(event, types.Message):
             await event.answer(text, reply_markup=keyboard)
+
+        elif isinstance(event.message, types.Message):
+            await event.message.edit_text(text, reply_markup=keyboard)
+
+        else:
+            await event.answer(gettext("cannot_send_message"))
+
     except Exception:
         logger.exception("Failed to send message")
 

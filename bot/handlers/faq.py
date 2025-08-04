@@ -13,17 +13,14 @@ logger = logging.getLogger(__name__)
 async def faq_handler(callback: types.CallbackQuery) -> None:
     """FAQ handler."""
     try:
-        if callback.message is None or isinstance(
-            callback.message,
-            types.InaccessibleMessage,
-        ):
+        if isinstance(callback.message, types.Message):
+            await callback.message.edit_text(
+                gettext("faq"),
+                reply_markup=inline.get_back_keyboard(gettext, "menu"),
+            )
+        else:
             await callback.answer(gettext("cannot_edit_message"))
-            return
 
-        await callback.message.edit_text(
-            gettext("faq"),
-            reply_markup=inline.get_back_keyboard(gettext, "menu"),
-        )
     except Exception:
         logger.exception("Failed to send message")
 

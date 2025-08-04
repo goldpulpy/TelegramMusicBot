@@ -28,15 +28,13 @@ async def sub_required_handler(
 
         if isinstance(event, types.Message):
             await event.answer(text, reply_markup=keyboard)
-        else:
-            if event.message is None or isinstance(
-                event.message,
-                types.InaccessibleMessage,
-            ):
-                await event.answer(gettext("cannot_send_message"))
-                return
 
+        elif isinstance(event.message, types.Message):
             await event.message.answer(text, reply_markup=keyboard)
+
+        else:
+            await event.answer(gettext("cannot_send_message"))
+
     except Exception:
         logger.exception("Failed to send message")
 
@@ -48,10 +46,7 @@ async def sub_check_handler(
 ) -> None:
     """Subscription check handler."""
     sub_check = NotSubbedFilter()
-    if callback.message is None or isinstance(
-        callback.message,
-        types.InaccessibleMessage,
-    ):
+    if not isinstance(callback.message, types.Message):
         await callback.answer(gettext("cannot_send_message"))
         return
 

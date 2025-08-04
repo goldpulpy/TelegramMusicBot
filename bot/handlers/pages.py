@@ -23,18 +23,10 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
             await callback.answer(gettext("invalid_data"))
             return
 
-        data_parts = callback.data.split(":")
-        if len(data_parts) < 4:  # noqa: PLR2004
-            await callback.answer(gettext("invalid_data"))
-            return
-
-        _, _, search_id, page = data_parts
+        _, _, search_id, page = callback.data.split(":")
         tracks: list[Track] = await load_tracks_from_db(int(search_id))
 
-        if callback.message is None or isinstance(
-            callback.message,
-            types.InaccessibleMessage,
-        ):
+        if not isinstance(callback.message, types.Message):
             await callback.answer(gettext("cannot_edit_message"))
             return
 
@@ -47,6 +39,7 @@ async def pages_handler(callback: types.CallbackQuery) -> None:
         )
     except TelegramBadRequest:
         await callback.answer(gettext("cannot_edit_message"))
+
     except Exception:
         logger.exception("Failed to handle pages navigation")
         await callback.answer(gettext("error_occurred"))
