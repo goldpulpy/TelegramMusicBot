@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import aiohttp
 from aiohttp import ClientTimeout
 from bs4 import BeautifulSoup, Tag
+from tenacity import retry, stop_after_attempt, wait_exponential
 from typing_extensions import Self
 
 from .data import ServiceConfig, Track
@@ -69,6 +70,10 @@ class Music:
         """Get top tracks."""
         return await self._parse_tracks(f"https://{self.BASE_URL}")
 
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=1, max=5),
+    )
     async def _parse_tracks(self, url: str) -> list[Track]:
         """Parse tracks from the given URL."""
         try:
@@ -140,6 +145,10 @@ class Music:
             msg = f"Failed to download {resource_type}"
             raise MusicServiceError(msg) from e
 
+    @retry(
+        stop=stop_after_attempt(3),
+        wait=wait_exponential(multiplier=1, min=1, max=5),
+    )
     async def get_audio_bytes(self, track: Track) -> bytes:
         """Download music file."""
         return await self._download_data(track.audio_url, "audio", track.name)

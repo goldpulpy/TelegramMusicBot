@@ -3,3 +3,4 @@ aiogram[i18n]==3.17.0
 sqlalchemy==2.0.36
 beautifulsoup4==4.12.3
 asyncpg==0.30.0
+tenacity==9.1.2
