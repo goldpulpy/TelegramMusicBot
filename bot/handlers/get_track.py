@@ -6,7 +6,7 @@ from aiogram import Bot, F, Router, types
 from aiogram.types import BufferedInputFile
 from aiogram.utils.i18n import gettext
 
-from bot.utils import load_tracks_from_db
+from bot.utils import get_user_pic, load_tracks_from_db
 from service import Music, Track
 
 logger = logging.getLogger(__name__)
@@ -41,6 +41,7 @@ async def send_track(
             title=track.title,
             performer=track.performer,
             caption=gettext("promo_caption").format(username=me.username),
+            thumbnail=await get_user_pic(bot, me),
         )
     except Exception:
         if callback.message is not None:
