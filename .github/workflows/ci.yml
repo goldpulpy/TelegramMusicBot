@@ -34,6 +34,7 @@ jobs:
           "ruff>=0.16.2"
           "pyright>=1.1.411"
           "pytest>=9.1.1"
+          "pytest-asyncio>=1.4.0"
 
       - name: Check formatting
         run: ruff format --check .
