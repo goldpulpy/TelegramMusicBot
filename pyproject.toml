@@ -5,7 +5,7 @@ description = "A Telegram Music Bot"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "aiogram>=3.30.0",
+    "aiogram[i18n]>=3.30.0",
     "asyncpg>=0.31.0",
     "beautifulsoup4>=4.15.0",
     "sqlalchemy>=2.0.51",
@@ -21,13 +21,13 @@ dev = [
 ]
 
 [tool.ruff]
-src = ["."]
 exclude = [
     ".git",
     "__pycache__",
     "scripts",
     "build",
     "dist",
+    ".agents",
 ]
 line-length = 79
 fix = true
@@ -41,10 +41,10 @@ ignore = ["CPY001"]
 "tests/**" = ["S101"]
 
 [tool.pyright]
-include = ["src"]
 exclude = [
     "**/__pycache__",
     ".venv",
+    ".agents",
 ]
 pythonVersion = "3.12"
 venvPath = "."
@@ -53,6 +53,7 @@ typeCheckingMode = "basic"
 reportMissingTypeStubs = false
 
 [tool.poe.tasks]
+lang-compile = "pybabel compile -d locales -D messages"
 run = "python main.py"
 
 format = "ruff format ."

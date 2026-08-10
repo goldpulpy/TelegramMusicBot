@@ -2,29 +2,31 @@
 
 ## Project Structure & Module Organization
 
-`main.py` wires together aiogram, localization, and database initialization. Telegram-facing code lives in `bot/`: handlers, filters, middleware, and keyboards have dedicated packages. SQLAlchemy setup, CRUD helpers, and models belong in `database/`; music-provider integration is isolated in `service/`. Translation sources are in `locales/<language>/LC_MESSAGES/messages.po`, with language metadata in `locales/_support_languages.py`. Docker definitions are at the root, with database-only services in `dev/`.
+`main.py` initializes aiogram, the database, and polling. Telegram code lives in `bot/`; keep handlers, filters, middleware, and keyboards in their matching packages. SQLAlchemy setup and models belong in `database/`, while music-provider integration belongs in `service/`. Translation catalogs are under `locales/<language>/LC_MESSAGES/`. Put tests in `tests/`, mirroring source packages where practical. Docker configuration is at the root and in `dev/`; CI workflows live in `.github/workflows/`.
 
 ## Build, Test, and Development Commands
 
-- `uv sync --dev` creates the Python 3.12 environment from `pyproject.toml` and `uv.lock`.
-- `cp .env.example .env` prepares configuration; replace its placeholders before starting.
-- `uv run poe run` starts the bot locally with `python main.py`.
-- `uv run poe check` formats, lints with Ruff, and runs Pyright.
-- `docker compose up -d --build` builds and starts the bot, PostgreSQL, and Adminer; `docker compose down` stops them.
-- `docker compose -f dev/docker-compose.yml up -d` starts only the development database services.
+The project requires Python 3.12 and uses `uv` with the committed `uv.lock`.
+
+- `uv sync` — create/update `.venv` and install runtime and development dependencies.
+- `uv run poe run` — start locally after exporting `.env` values and starting PostgreSQL.
+- `docker compose up -d --build` — build and run the bot, PostgreSQL, and Adminer stack.
+- `uv run poe lang-compile` — compile translation catalogs after editing `.po` files.
+- `uv run ruff format --check . && uv run poe lint && uv run poe type-check && uv run poe tests` — reproduce CI quality gates without modifying files.
+- `uv run poe format` — format the repository in place.
 
 ## Coding Style & Naming Conventions
 
-Use four-space indentation, type annotations, and short docstrings for public APIs. Ruff enforces a 79-character line length and its configured `ALL` rule set. Use `snake_case` for modules, functions, and variables, `PascalCase` for classes, and uppercase names for constants. Keep async I/O explicit and register handlers through the existing setup pattern.
+Use four-space indentation, a 79-character line limit, and type annotations for public functions and model attributes. Ruff enforces all lint rule families except copyright notices; Pyright runs in basic mode. Use `snake_case` for modules/functions/variables, `PascalCase` for classes, and `UPPER_SNAKE_CASE` for constants. Keep handlers small and asynchronous; use loggers instead of `print`.
 
 ## Testing Guidelines
 
-Tests are required for new behavior and bug fixes. Place them under `tests/`, mirror the production package structure, and name files `test_<module>.py` and functions `test_<behavior>()`. Mock Telegram API, PostgreSQL, and music-provider calls so tests remain deterministic. The repository does not yet declare a test runner; add one to the development dependency group and expose its command through Poe when introducing the first tests. Run `uv run poe check` before submitting changes.
+Write Pytest tests as `tests/test_<module>.py` with functions named `test_<behavior>`. Prefer isolated unit tests and mock Telegram, network, and database boundaries. No coverage threshold is configured, but new behavior and bug fixes should include focused regression tests. Run `uv run poe tests` before submitting.
 
 ## Commit & Pull Request Guidelines
 
-History uses Conventional Commit-style subjects such as `feat:`, `refactor:`, and `change:`. Prefer an imperative summary (for example, `fix: handle empty search results`) and focused commits. PRs should explain behavior, configuration or schema effects, and verification; link related issues. Include screenshots for changed messages or keyboards, and update both language catalogs when user-facing text changes.
+History uses Conventional Commit-style subjects such as `feat: ...` and `refactor: ...`; use an imperative summary and focused commits. Pull requests should explain user-visible changes, note configuration or translation updates, link issues, and include screenshots for message-flow changes. Ensure all quality gates pass before review.
 
 ## Security & Configuration
 
-Never commit `.env`, bot tokens, database passwords, or captured user data. Add new settings to `.env.example` with safe placeholders. Preserve the container's non-root runtime and validate untrusted callback and message input at handler boundaries.
+Copy `.env.example` to `.env`; never commit bot tokens, database credentials, or generated secrets. Keep environment-specific values out of source and review dependency or Docker image updates carefully.
