@@ -2,51 +2,45 @@
 
 from __future__ import annotations
 
-import os
-import time
-from dataclasses import dataclass
-
-os.environ["TZ"] = os.getenv("TIMEZONE", "UTC")
-time.tzset()
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-@dataclass
-class BotConfig:
-    """Configuration class for the bot."""
+class BotConfig(BaseSettings):
+    """Bot config class."""
 
-    token: str | None = os.getenv("BOT_TOKEN")
+    token: str = Field(..., min_length=16)
 
-    def __post_init__(self) -> None:
-        """Post-init method for the bot configuration."""
-        if not self.token:
-            msg = "Bot token is not set"
-            raise ValueError(msg)
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        frozen=True,
+        env_prefix="BOT_",
+    )
 
 
-@dataclass
-class DBConfig:
-    """Configuration class for the database."""
+class DBConfig(BaseSettings):
+    """Database config class."""
 
-    host: str = os.getenv("POSTGRES_HOST", "db")
-    port: str = os.getenv("POSTGRES_PORT", "5432")
-    user: str | None = os.getenv("POSTGRES_USER")
-    password: str | None = os.getenv("POSTGRES_PASSWORD")
-    db: str | None = os.getenv("POSTGRES_DB")
+    host: str = "localhost"
+    port: int = Field(default=5432, ge=1, le=65535)
+    user: str
+    password: str
+    db: str
 
-    def __post_init__(self) -> None:
-        """Post-init method for the database configuration."""
-        if not self.user or not self.password or not self.db:
-            msg = "Database configuration is incomplete"
-            raise ValueError(msg)
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        frozen=True,
+        env_prefix="POSTGRES_",
+    )
 
     @property
     def url(self) -> str:
-        """Construct and return the database URL using instance attributes."""
+        """DB URL."""
         return (
-            "postgresql+asyncpg://"
-            f"{self.user}:{self.password}@{self.host}:{self.port}/{self.db}"
+            f"postgresql+asyncpg://{self.user}:{self.password}"
+            f"@{self.host}:{self.port}/{self.db}"
         )
 
 
-bot_config = BotConfig()
-db_config = DBConfig()
+bot_config = BotConfig()  # type: ignore[call-arg]
+db_config = DBConfig()  # type: ignore[call-arg]

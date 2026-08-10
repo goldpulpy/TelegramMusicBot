@@ -490,7 +490,9 @@ propcache==0.5.2 \
 pydantic==2.13.4 \
     --hash=sha256:45a282cde31d808236fd7ea9d919b128653c8b38b393d1c4ab335c62924d9aba \
     --hash=sha256:c40756b57adaa8b1efeeced5c196f3f3b7c435f90e84ea7f443901bec8099ef6
-    # via aiogram
+    # via
+    #   aiogram
+    #   pydantic-settings
 pydantic-core==2.46.4 \
     --hash=sha256:00c603d540afdd6b80eb39f078f33ebd46211f02f33e34a32d9f053bba711de0 \
     --hash=sha256:0186750b482eefa11d7f435892b09c5c606193ef3375bcf94aa00ae6bfb66262 \
@@ -558,6 +560,14 @@ pydantic-core==2.46.4 \
     --hash=sha256:fbdb89b3e1c94a30cc5edfce477c6e6a5dc4d8f84665b455c27582f211a1c72c \
     --hash=sha256:fc3e9034a63de20e15e8ade85358bc6efc614008cab72898b4b4952bea0509ff
     # via pydantic
+pydantic-settings==2.15.0 \
+    --hash=sha256:0ba092c291c94baceb5eff768aa0d56400a457585bc0175925a5a5510303da42 \
+    --hash=sha256:694b793e84f766ba76a90ebdefc01d0a9a045dab0382bee70393da93712ad117
+    # via telegrammusicbot
+python-dotenv==1.2.2 \
+    --hash=sha256:1d8214789a24de455a8b8bd8ae6fe3c6b69a5e3d64aa8a8e5d68e694bbcb285a \
+    --hash=sha256:2c371a91fbd7ba082c2c1dc1f8bf89ca22564a087c2c287cd9b662adde799cf3
+    # via pydantic-settings
 soupsieve==2.9.2 \
     --hash=sha256:4a55d8cf158a9c2e587fa4922f1bbb91d68ac829e2d6f25403a85747c71daf74 \
     --hash=sha256:8089a26fd974ca7a1f30276d3d8492ab266ab15af581642dfe8aa162e0c1c823
@@ -613,7 +623,9 @@ typing-extensions==4.16.0 \
 typing-inspection==0.4.3 \
     --hash=sha256:5f42b23858a91e0b4ef521f5418f03a0da3c9216fd2995ef5e73463100e676cd \
     --hash=sha256:c5f9ec1530b5c1e2c9bc34a84d9a3466ed1b2f3f2fa9f901368d9c5596210e4d
-    # via pydantic
+    # via
+    #   pydantic
+    #   pydantic-settings
 yarl==1.24.5 \
     --hash=sha256:0055afc45e864b92729ac7600e2d102c17bef060647e74bca75fa84d66b9ff36 \
     --hash=sha256:0465ec8cedc2349b97a6b595ace64084a50c6e839eca40aa0626f38b8350e331 \
