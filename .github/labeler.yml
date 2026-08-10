@@ -34,3 +34,8 @@ docker:
       - any-glob-to-any-file:
           - "**/Dockerfile"
           - "**/docker-compose.yml"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/**"
