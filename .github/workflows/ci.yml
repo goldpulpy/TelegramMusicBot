@@ -1,65 +1,48 @@
-name: CI Workflow
+name: CI
 
 on:
-  push:
-    branches: ["main"]
-    paths:
-      - "bot/**"
-      - "database/**"
-      - "locales/**"
-      - "service/**"
-      - "main.py"
-      - "requirements.txt"
-      - "Dockerfile"
-      - "configs.py"
-
   pull_request:
-    branches: ["main"]
-    paths:
-      - "bot/**"
-      - "database/**"
-      - "locales/**"
-      - "service/**"
-      - "main.py"
-      - "requirements.txt"
-      - "Dockerfile"
-      - "configs.py"
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_call:
 
 permissions:
   contents: read
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
-  build:
+  quality:
+    name: Python quality gates
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Set up Python 3.11
+      - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-          cache: "pip"
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8
+      - name: Install runtime dependencies
+        run: python -m pip install --require-hashes -r requirements.txt
 
-      - name: Analysing the code with flake8
-        run: |
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Install quality tools
+        run: >-
+          python -m pip install
+          "ruff>=0.16.2"
+          "pyright>=1.1.411"
+          "pytest>=9.1.1"
 
-      - name: Build the Docker image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: false
-          tags: app:ci
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Check formatting
+        run: ruff format --check .
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Type check
+        run: pyright .
+
+      - name: Test
+        run: pytest tests
