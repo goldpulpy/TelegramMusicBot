@@ -22,17 +22,5 @@ services:
     depends_on:
       - postgres
 
-  app:
-    image: telegram-music-bot
-    container_name: telegram-music-bot
-    build:
-      context: .
-      dockerfile: Dockerfile
-    restart: always
-    env_file:
-      - .env
-    depends_on:
-      - postgres
-
 volumes:
   telegram-music-bot-db:
