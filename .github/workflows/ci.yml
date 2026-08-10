@@ -11,8 +11,48 @@ permissions:
   contents: read
 
 jobs:
-  quality:
-    name: Python quality gates
+  format:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install Ruff
+        run: python -m pip install "ruff>=0.16.2"
+
+      - name: Check formatting
+        run: ruff format --check .
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install Ruff
+        run: python -m pip install "ruff>=0.16.2"
+
+      - name: Run Ruff lint
+        run: ruff check .
+
+  type-check:
+    name: Type check
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
@@ -28,22 +68,38 @@ jobs:
       - name: Install runtime dependencies
         run: python -m pip install --require-hashes -r requirements.txt
 
-      - name: Install quality tools
+      - name: Install type-check dependencies
         run: >-
           python -m pip install
-          "ruff>=0.16.2"
           "pyright>=1.1.411"
           "pytest>=9.1.1"
           "pytest-asyncio>=1.4.0"
 
-      - name: Check formatting
-        run: ruff format --check .
-
-      - name: Lint
-        run: ruff check .
-
-      - name: Type check
+      - name: Run Pyright
         run: pyright .
 
-      - name: Test
+  test:
+    name: Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: requirements.txt
+
+      - name: Install runtime dependencies
+        run: python -m pip install --require-hashes -r requirements.txt
+
+      - name: Install test dependencies
+        run: >-
+          python -m pip install
+          "pytest>=9.1.1"
+          "pytest-asyncio>=1.4.0"
+
+      - name: Run tests
         run: pytest tests
