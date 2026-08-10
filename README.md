@@ -11,7 +11,7 @@
 [![CI](https://github.com/goldpulpy/TelegramMusicBot/actions/workflows/ci.yml/badge.svg)](https://github.com/goldpulpy/TelegramMusicBot/actions/workflows/ci.yml)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
-[🎧 Демо](https://t.me/mygoldmusicbot) · [🚀 Быстрый старт](#-быстрый-старт-в-docker) · [💻 Разработка](#-локальная-разработка) · [📄 Лицензия](#-лицензия)
+[🎧 Демо](https://t.me/mygoldmusicbot) · [🚀 Быстрый старт](#-быстрый-старт-в-docker) · [💻 Разработка](#-локальная-разработка) · [📝 OpenSpec](#-openspec) · [📄 Лицензия](#-лицензия)
 
 </div>
 
@@ -273,6 +273,58 @@ uv run poe tests
 > [!TIP]
 > Для Ruff включены автоисправления, включая unsafe fixes, поэтому после
 > `poe lint` всегда просматривайте diff.
+
+---
+
+## 📝 OpenSpec
+
+Проект использует OpenSpec и подход spec-driven development для планирования
+изменений до начала реализации. OpenSpec обслуживается AI-агентом через
+специализированные skills: разработчику не нужно вручную вести изменения через
+OpenSpec CLI или редактировать его служебные файлы.
+
+### Установка
+
+Для работы skills требуется Node.js 20.19.0 или новее и глобально установленный
+OpenSpec CLI:
+
+```bash
+node --version
+npm install -g @fission-ai/openspec@latest
+openspec --version
+```
+
+Репозиторий уже инициализирован, поэтому запускать `openspec init` после
+клонирования не нужно. Другие варианты установки доступны в
+[официальной документации OpenSpec](https://openspec.dev/docs/installation).
+
+Типичный рабочий процесс:
+
+1. Обсудите неясную идею с агентом через `$openspec-explore`.
+2. Попросите подготовить изменение через `$openspec-propose`, описав желаемое
+   поведение. Агент создаст proposal, design, delta-спецификации и список задач.
+3. Проверьте и согласуйте получившийся план.
+4. Отдельным запросом запустите реализацию через `$openspec-apply-change`.
+5. После завершения и проверки реализации вызовите
+   `$openspec-archive-change`. Агент синхронизирует основные спецификации и
+   перенесёт завершённое изменение в архив.
+
+Например:
+
+```text
+$openspec-propose Добавь пользователю возможность создавать плейлисты
+$openspec-apply-change add-playlists
+$openspec-archive-change add-playlists
+```
+
+При необходимости основные спецификации можно обновить без архивации через
+`$openspec-sync-specs`. В Codex skills вызываются с префиксом `$`; в клиентах,
+которые используют slash-команды, тот же workflow может быть доступен как
+`/openspec-propose`, `/openspec-apply-change` и `/openspec-archive-change`.
+
+Актуальные требования находятся в `openspec/specs/`, активные изменения - в
+`openspec/changes/`, а завершённые - в `openspec/changes/archive/`. Эти файлы
+нужно коммитить вместе с соответствующими изменениями кода.
 
 ---
 
