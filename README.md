@@ -340,6 +340,6 @@ uv run poe tests
 
 <div align="center">
 
-Создано с ❤️ [goldpulpy](https://github.com/goldpulpy)
+Created with ❤️ by [goldpulpy](https://github.com/goldpulpy)
 
 </div>
