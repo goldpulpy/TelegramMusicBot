@@ -37,6 +37,9 @@ unsafe-fixes = true
 select = ["ALL"]
 ignore = ["CPY001"]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101"]
+
 [tool.pyright]
 include = ["src"]
 exclude = [
