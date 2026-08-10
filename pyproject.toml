@@ -18,8 +18,13 @@ dev = [
     "poethepoet>=0.48.0",
     "pyright>=1.1.411",
     "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
     "ruff>=0.16.2",
 ]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
 
 [tool.ruff]
 exclude = [
@@ -36,10 +41,21 @@ unsafe-fixes = true
 
 [tool.ruff.lint]
 select = ["ALL"]
-ignore = ["CPY001"]
+ignore = ["COM812", "CPY001"]
 
 [tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S101"]
+"tests/**" = [
+    "ANN",
+    "ARG",
+    "D",
+    "FBT",
+    "PLR2004",
+    "PT012",
+    "S101",
+    "S105",
+    "S106",
+    "SLF001",
+]
 
 [tool.pyright]
 exclude = [
