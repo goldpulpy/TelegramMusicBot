@@ -103,3 +103,13 @@ jobs:
 
       - name: Run tests
         run: pytest tests
+
+  docker-build:
+    name: Docker build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build --tag telegram-music-bot:ci .
