@@ -1,0 +1,65 @@
+name: CI Workflow
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "bot/**"
+      - "database/**"
+      - "locales/**"
+      - "service/**"
+      - "main.py"
+      - "requirements.txt"
+      - "Dockerfile"
+      - "configs.py"
+
+  pull_request:
+    branches: ["main"]
+    paths:
+      - "bot/**"
+      - "database/**"
+      - "locales/**"
+      - "service/**"
+      - "main.py"
+      - "requirements.txt"
+      - "Dockerfile"
+      - "configs.py"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8
+
+      - name: Analysing the code with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      - name: Build the Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: false
+          tags: app:ci
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

@@ -16,6 +16,7 @@ dependencies = [
 dev = [
     "poethepoet>=0.48.0",
     "pyright>=1.1.411",
+    "pytest>=9.1.1",
     "ruff>=0.16.2",
 ]
 
@@ -54,9 +55,11 @@ run = "python main.py"
 format = "ruff format ."
 lint = "ruff check ."
 type-check = "pyright ."
+tests = "pytest tests"
 
 check = [
     "format",
     "lint",
     "type-check",
+    "tests",
 ]
