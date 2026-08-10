@@ -4,13 +4,12 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Self
 
 import aiohttp
 from aiohttp import ClientTimeout
 from bs4 import BeautifulSoup, Tag
 from tenacity import retry, stop_after_attempt, wait_exponential
-from typing_extensions import Self
 
 from .data import ServiceConfig, Track
 from .exceptions import MusicServiceError
