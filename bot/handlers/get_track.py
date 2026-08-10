@@ -65,6 +65,10 @@ async def get_track_handler(callback: types.CallbackQuery, bot: Bot) -> None:
         await callback.answer(gettext("track_sending"))
         await send_track(callback, bot, track)
 
+    except (IndexError, ValueError):
+        await callback.answer(gettext("invalid_data"))
+        logger.warning("Invalid get track callback data: %r", callback.data)
+
     except Exception:
         logger.exception("Failed get track handler")
 
