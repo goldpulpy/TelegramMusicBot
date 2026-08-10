@@ -1,7 +1,7 @@
 """Inline keyboard templates."""
 
+from collections.abc import Callable
 from enum import Enum, auto
-from typing import Callable
 
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 

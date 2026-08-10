@@ -1,0 +1,59 @@
+version: 2
+
+updates:
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+
+    open-pull-requests-limit: 10
+    versioning-strategy: "increase"
+
+    labels:
+      - "dependencies"
+      - "python"
+
+    commit-message:
+      prefix: "pip"
+      include: "scope"
+
+    groups:
+      pip-patch-and-minor:
+        update-types:
+          - "patch"
+          - "minor"
+
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+
+    open-pull-requests-limit: 10
+
+    labels:
+      - "dependencies"
+      - "ci"
+
+    commit-message:
+      prefix: "ci"
+      include: "scope"
+
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+          - "minor"
+
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"

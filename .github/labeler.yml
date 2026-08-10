@@ -1,0 +1,41 @@
+documentation:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "README.md"
+
+dependencies:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "requirements.txt"
+          - "pyproject.toml"
+          - "uv.lock"
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file:
+          - ".github/workflows/**"
+          - ".github/*.yml"
+          - ".github/*.yaml"
+
+python:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/*.py"
+          - "pyproject.toml"
+
+config:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/.env.example"
+          - "configs.py"
+
+docker:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "**/Dockerfile"
+          - "**/docker-compose.yml"
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file:
+          - "tests/**"

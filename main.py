@@ -14,9 +14,17 @@ from bot import handlers, middlewares
 from configs import bot_config
 from database.engine import init_db
 
+LOGGER_LEVELS = {
+    "aiogram": logging.ERROR,
+}
+
+for name, level in LOGGER_LEVELS.items():
+    logging.getLogger(name).setLevel(level)
+
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s:%(name)s - %(message)s",
+    format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
+    datefmt="%Y-%m-%d %H:%M:%S",
 )
 logger = logging.getLogger(__name__)
 
@@ -25,7 +33,7 @@ async def create_bot() -> Bot:
     """Create and return a Bot instance."""
     try:
         bot = Bot(
-            token=bot_config.token or "",
+            token=bot_config.token.get_secret_value() or "",
             default=DefaultBotProperties(parse_mode=ParseMode.HTML),
         )
         logger.info("Successfully created bot instance.")
@@ -58,4 +66,15 @@ async def main() -> None:
 
 if __name__ == "__main__":
     logger.info("Starting application...")
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+
+    except (KeyboardInterrupt, SystemExit):
+        logger.info("Application interrupted by user.")
+
+    except Exception:
+        logger.exception("An error occurred")
+        raise
+
+    finally:
+        logger.info("Application finished.")

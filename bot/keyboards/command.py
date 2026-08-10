@@ -1,6 +1,6 @@
 """Command keyboard for the bot."""
 
-from typing import Callable
+from collections.abc import Callable
 
 from aiogram.types import BotCommand
 

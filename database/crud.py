@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import logging
 from contextlib import asynccontextmanager
-from typing import TYPE_CHECKING, Any, Generic, TypeVar
+from typing import TYPE_CHECKING, Any, TypeVar
 
 from sqlalchemy import select
 from sqlalchemy.exc import SQLAlchemyError
@@ -22,7 +22,7 @@ T = TypeVar("T")
 logger = logging.getLogger(__name__)
 
 
-class CRUD(Generic[T]):
+class CRUD[T]:
     """Generic class to handle CRUD operations for any model."""
 
     def __init__(

@@ -1,0 +1,86 @@
+[project]
+name = "telegrammusicbot"
+version = "1.2.0"
+description = "A Telegram Music Bot"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "aiogram[i18n]>=3.30.0",
+    "asyncpg>=0.31.0",
+    "beautifulsoup4>=4.15.0",
+    "pydantic-settings>=2.15.0",
+    "sqlalchemy>=2.0.51",
+    "tenacity>=9.1.4",
+]
+
+[dependency-groups]
+dev = [
+    "poethepoet>=0.48.0",
+    "pyright>=1.1.411",
+    "pytest>=9.1.1",
+    "pytest-asyncio>=1.4.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.16.2",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+
+[tool.ruff]
+exclude = [
+    ".git",
+    "__pycache__",
+    "scripts",
+    "build",
+    "dist",
+    ".agents",
+]
+line-length = 79
+fix = true
+unsafe-fixes = true
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = ["COM812", "CPY001"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = [
+    "ANN",
+    "ARG",
+    "D",
+    "FBT",
+    "PLR2004",
+    "PT012",
+    "S101",
+    "S105",
+    "S106",
+    "SLF001",
+]
+
+[tool.pyright]
+exclude = [
+    "**/__pycache__",
+    ".venv",
+    ".agents",
+]
+pythonVersion = "3.12"
+venvPath = "."
+venv = ".venv"
+typeCheckingMode = "basic"
+reportMissingTypeStubs = false
+
+[tool.poe.tasks]
+lang-compile = "pybabel compile -d locales -D messages"
+run = "python main.py"
+
+format = "ruff format ."
+lint = "ruff check ."
+type-check = "pyright ."
+tests = "pytest tests"
+
+check = [
+    "format",
+    "lint",
+    "type-check",
+    "tests",
+]
