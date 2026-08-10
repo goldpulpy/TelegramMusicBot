@@ -33,7 +33,7 @@ async def create_bot() -> Bot:
     """Create and return a Bot instance."""
     try:
         bot = Bot(
-            token=bot_config.token or "",
+            token=bot_config.token.get_secret_value() or "",
             default=DefaultBotProperties(parse_mode=ParseMode.HTML),
         )
         logger.info("Successfully created bot instance.")
