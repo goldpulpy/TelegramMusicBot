@@ -92,8 +92,7 @@ class Music:
                 results = soup.find("div", class_="results")
 
                 if not isinstance(results, Tag):
-                    msg = "Could not find results element"
-                    raise TypeError(msg)
+                    self._raise_results_not_found_error()
 
                 tracks = [
                     Track.from_element(track_data, index)
@@ -114,6 +113,11 @@ class Music:
             raise MusicServiceError(msg) from e
 
         return tracks
+
+    def _raise_results_not_found_error(self) -> None:
+        """Raise an error when the results element is missing."""
+        msg = "Could not find results element"
+        raise TypeError(msg)
 
     def _raise_file_too_large_error(self, content_length: int) -> None:
         """Raise an error for files that are too large."""
