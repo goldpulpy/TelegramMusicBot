@@ -104,7 +104,12 @@ class Music:
 
             logger.info("Found %d tracks", len(tracks))
 
-        except (aiohttp.ClientError, TimeoutError) as e:
+        except (
+            aiohttp.ClientError,
+            TimeoutError,
+            TypeError,
+            ValueError,
+        ) as e:
             msg = f"Failed to search music: {e!s}"
             raise MusicServiceError(msg) from e
 

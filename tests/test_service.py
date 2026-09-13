@@ -221,7 +221,7 @@ async def test_parse_tracks_rejects_missing_results(
         reraise=True,
     )
 
-    with pytest.raises(TypeError, match="results"):
+    with pytest.raises(MusicServiceError, match="results"):
         await parse_once(music, "https://provider")
 
 
