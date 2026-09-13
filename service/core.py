@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, NoReturn, Self
 from urllib.parse import quote
 
 import aiohttp
@@ -114,7 +114,7 @@ class Music:
 
         return tracks
 
-    def _raise_results_not_found_error(self) -> None:
+    def _raise_results_not_found_error(self) -> NoReturn:
         """Raise an error when the results element is missing."""
         msg = "Could not find results element"
         raise TypeError(msg)
