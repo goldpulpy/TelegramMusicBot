@@ -23,14 +23,32 @@ if TYPE_CHECKING:
 @pytest.mark.parametrize(
     ("keyword", "expected"),
     [
-        ("  Hello World  ", "https://hello-world.vuxo7.com"),
-        ("Rock & Roll!", "https://rock--roll.vuxo7.com"),
-        ("MiXeD CaSe", "https://mixed-case.vuxo7.com"),
-        ("привет мир", "https://xn----ctbjkdxqigq.vuxo7.com"),
+        (
+            "  Hello World  ",
+            "https://dydki.net/?mp3=%20%20Hello%20World%20%20",
+        ),
+        (
+            "Rock & Roll!",
+            "https://dydki.net/?mp3=Rock%20%26%20Roll%21",
+        ),
+        ("MiXeD CaSe", "https://dydki.net/?mp3=MiXeD%20CaSe"),
+        (
+            "привет мир",
+            (
+                "https://dydki.net/?mp3="
+                "%D0%BF%D1%80%D0%B8%D0%B2%D0%B5%D1%82%20"
+                "%D0%BC%D0%B8%D1%80"
+            ),
+        ),
     ],
 )
 def test_build_search_query(keyword: str, expected: str) -> None:
     assert Music().build_search_query(keyword) == expected
+
+
+def test_build_search_query_derives_no_host() -> None:
+    url = Music().build_search_query("evil.example.com")
+    assert url == "https://dydki.net/?mp3=evil.example.com"
 
 
 def test_track_from_dict_converts_index() -> None:
@@ -49,11 +67,11 @@ def test_track_from_dict_converts_index() -> None:
 
 def test_track_from_element_reads_metadata() -> None:
     element = BeautifulSoup(
-        """<li><span class="playlist-name-artist"> Artist </span>
-        <span class="playlist-name-title"> Song </span>
-        <button class="playlist-play" data-url="https://audio"></button></li>""",
+        """<div class="chkd" data-mp3="https://audio">
+        <span class="track__artist"> Artist </span>
+        <span class="track__title"> Song </span></div>""",
         "html.parser",
-    ).li
+    ).div
     assert element is not None
 
     track = Track.from_element(element, 4)
@@ -70,12 +88,12 @@ def test_track_from_element_reads_metadata() -> None:
 @pytest.mark.parametrize(
     "markup",
     [
-        '<li><span class="playlist-name-title">Song</span></li>',
-        '<li><span class="playlist-name-artist">Artist</span></li>',
+        '<div class="chkd"><span class="track__title">Song</span></div>',
+        '<div class="chkd"><span class="track__artist">Artist</span></div>',
     ],
 )
 def test_track_from_element_requires_names(markup: str) -> None:
-    element = BeautifulSoup(markup, "html.parser").li
+    element = BeautifulSoup(markup, "html.parser").div
     assert element is not None
     with pytest.raises(ValueError, match="artist name"):
         Track.from_element(element, 0)
@@ -83,10 +101,10 @@ def test_track_from_element_requires_names(markup: str) -> None:
 
 def test_track_from_element_requires_audio_element() -> None:
     element = BeautifulSoup(
-        '<li><span class="playlist-name-artist">A</span>'
-        '<span class="playlist-name-title">T</span></li>',
+        '<div class="chkd"><span class="track__artist">A</span>'
+        '<span class="track__title">T</span></div>',
         "html.parser",
-    ).li
+    ).div
     assert element is not None
     with pytest.raises(TypeError, match="audio URL"):
         Track.from_element(element, 0)
@@ -126,10 +144,10 @@ async def test_search_and_top_hits_use_expected_urls() -> None:
     await music.get_top_hits()
 
     assert music._parse_tracks.await_args_list[0].args == (
-        "https://hello-world.vuxo7.com",
+        "https://dydki.net/?mp3=Hello%20World",
     )
     assert music._parse_tracks.await_args_list[1].args == (
-        "https://vuxo7.com",
+        "https://dydki.net/",
     )
 
 
@@ -138,13 +156,13 @@ async def test_parse_tracks_returns_ordered_tracks(
     http_response_factory: type,
 ) -> None:
     response = http_response_factory(
-        text_body="""<ul class="playlist">
-        <li><span class="playlist-name-artist">A</span>
-        <span class="playlist-name-title">One</span>
-        <i class="playlist-play" data-url="u1"></i></li>
-        <li><span class="playlist-name-artist">B</span>
-        <span class="playlist-name-title">Two</span>
-        <i class="playlist-play" data-url="u2"></i></li></ul>""",
+        text_body="""<div class="results">
+        <div class="chkd" data-mp3="u1">
+        <span class="track__artist">A</span>
+        <span class="track__title">One</span></div>
+        <div class="chkd" data-mp3="u2">
+        <span class="track__artist">B</span>
+        <span class="track__title">Two</span></div></div>""",
     )
     music = Music()
     music._session = MagicMock()
@@ -159,7 +177,20 @@ async def test_parse_tracks_returns_ordered_tracks(
 
 
 @pytest.mark.asyncio
-async def test_parse_tracks_rejects_missing_playlist(
+async def test_parse_tracks_empty_results_returns_empty_list(
+    http_response_factory: type,
+) -> None:
+    music = Music()
+    music._session = MagicMock()
+    music._session.get.return_value = http_response_factory(
+        text_body='<div class="results"></div>',
+    )
+
+    assert await music._parse_tracks("https://provider") == []
+
+
+@pytest.mark.asyncio
+async def test_parse_tracks_rejects_missing_results(
     http_response_factory: type,
 ) -> None:
     music = Music()
@@ -173,7 +204,7 @@ async def test_parse_tracks_rejects_missing_playlist(
         reraise=True,
     )
 
-    with pytest.raises(TypeError, match="playlist"):
+    with pytest.raises(TypeError, match="results"):
         await parse_once(music, "https://provider")
 
 

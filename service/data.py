@@ -5,9 +5,10 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from bs4 import BeautifulSoup, Tag
+if TYPE_CHECKING:
+    from bs4 import BeautifulSoup, Tag
 
 headers_path = Path(__file__).parent / "headers.json"
 
@@ -52,8 +53,8 @@ class Track:
         index: int,
     ) -> Track:
         """Create Track from BeautifulSoup element."""
-        artist_name_element = element.find(class_="playlist-name-artist")
-        track_name_element = element.find(class_="playlist-name-title")
+        artist_name_element = element.find(class_="track__artist")
+        track_name_element = element.find(class_="track__title")
         if artist_name_element is None or track_name_element is None:
             msg = "Could not find artist name element"
             raise ValueError(msg)
@@ -63,16 +64,15 @@ class Track:
 
         full_name = f"{performer} - {title}"
 
-        audio_url = element.find(class_="playlist-play")
-        if not isinstance(audio_url, Tag):
+        audio_url = element.get("data-mp3")
+        if not isinstance(audio_url, str):
             msg = "Could not find audio URL element"
             raise TypeError(msg)
-        audio_url = audio_url.get("data-url", "")
 
         return cls(
             index=index,
             name=full_name,
             title=title,
             performer=performer,
-            audio_url=str(audio_url),
+            audio_url=audio_url,
         )
