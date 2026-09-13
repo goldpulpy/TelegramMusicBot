@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import logging
-import re
-from typing import TYPE_CHECKING, Self
+from typing import TYPE_CHECKING, NoReturn, Self
+from urllib.parse import quote
 
 import aiohttp
 from aiohttp import ClientTimeout
@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 class Music:
     """Service for searching and downloading music."""
 
-    BASE_URL = "vuxo7.com"
+    BASE_URL = "dydki.net"
+    SEARCH_ENDPOINT = f"https://{BASE_URL}/"
 
     def __init__(self, config: ServiceConfig | None = None) -> None:
         """Initialize music service with optional configuration."""
@@ -47,7 +48,7 @@ class Music:
     async def connect(self) -> None:
         """Initialize HTTP session."""
         if self._session is None:
-            self._session = aiohttp.ClientSession(headers=self._config.headers)
+            self._session = aiohttp.ClientSession()
 
     async def disconnect(self) -> None:
         """Close HTTP session."""
@@ -68,7 +69,7 @@ class Music:
 
     async def get_top_hits(self) -> list[Track]:
         """Get top tracks."""
-        return await self._parse_tracks(f"https://{self.BASE_URL}")
+        return await self._parse_tracks(self.SEARCH_ENDPOINT)
 
     @retry(
         stop=stop_after_attempt(3),
@@ -84,29 +85,39 @@ class Music:
             async with self._session.get(
                 url,
                 timeout=ClientTimeout(total=self._config.timeout),
+                allow_redirects=True,
             ) as response:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")
-                playlist = soup.find("ul", class_="playlist")
+                results = soup.find("div", class_="results")
 
-                if not isinstance(playlist, Tag):
-                    msg = "Could not find playlist element"
-                    raise TypeError(msg)
+                if not isinstance(results, Tag):
+                    self._raise_results_not_found_error()
 
                 tracks = [
                     Track.from_element(track_data, index)
                     for index, track_data in enumerate(
-                        playlist.find_all("li"),
+                        results.find_all("div", class_="chkd"),
                     )
                 ]
 
             logger.info("Found %d tracks", len(tracks))
 
-        except (aiohttp.ClientError, TimeoutError) as e:
+        except (
+            aiohttp.ClientError,
+            TimeoutError,
+            TypeError,
+            ValueError,
+        ) as e:
             msg = f"Failed to search music: {e!s}"
             raise MusicServiceError(msg) from e
 
         return tracks
+
+    def _raise_results_not_found_error(self) -> NoReturn:
+        """Raise an error when the results element is missing."""
+        msg = "Could not find results element"
+        raise TypeError(msg)
 
     def _raise_file_too_large_error(self, content_length: int) -> None:
         """Raise an error for files that are too large."""
@@ -154,13 +165,5 @@ class Music:
         return await self._download_data(track.audio_url, "audio", track.name)
 
     def build_search_query(self, keyword: str) -> str:
-        """Build search query with cleaned keyword."""
-        cleaned = re.sub(r"[^\w\s]", "", keyword)
-        query = cleaned.strip().lower().replace(" ", "-")
-
-        try:
-            subdomain = query.encode("idna").decode("ascii")
-        except UnicodeError:
-            subdomain = query
-
-        return f"https://{subdomain}.{self.BASE_URL}"
+        """Build search URL with the keyword as an encoded query value."""
+        return f"{self.SEARCH_ENDPOINT}?mp3={quote(keyword)}"
