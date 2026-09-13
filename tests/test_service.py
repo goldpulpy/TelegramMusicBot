@@ -118,12 +118,12 @@ async def test_connect_disconnect_session_lifecycle() -> None:
         "service.core.aiohttp.ClientSession",
         return_value=session,
     ) as factory:
-        music = Music(ServiceConfig(headers={}))
+        music = Music(ServiceConfig())
         await music.connect()
         await music.connect()
         await music.disconnect()
 
-    factory.assert_called_once_with(headers={})
+    factory.assert_called_once_with()
     session.close.assert_awaited_once()
     assert music._session is None
 
@@ -149,6 +149,23 @@ async def test_search_and_top_hits_use_expected_urls() -> None:
     assert music._parse_tracks.await_args_list[1].args == (
         "https://dydki.net/",
     )
+
+
+@pytest.mark.asyncio
+async def test_parse_tracks_follows_provider_redirects(
+    http_response_factory: type,
+) -> None:
+    music = Music()
+    music._session = MagicMock()
+    music._session.get.return_value = http_response_factory(
+        text_body='<div class="results"></div>',
+    )
+
+    await music._parse_tracks("https://dydki.net/?mp3=song")
+
+    call = music._session.get.call_args
+    assert call.args == ("https://dydki.net/?mp3=song",)
+    assert call.kwargs["allow_redirects"] is True
 
 
 @pytest.mark.asyncio

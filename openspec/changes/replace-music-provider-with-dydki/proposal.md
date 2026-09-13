@@ -20,7 +20,8 @@ downloads behind the existing `Music`/`Track` interface.
   parameter encoding; no hostname is derived from user input.
 - Track downloads use the absolute `mp3vk.sunproxy.net` URLs from `data-mp3`;
   the 50 MB guard, retries, and `MusicServiceError` translation are unchanged.
-- Update provider-specific tests and HTTP headers to match the new provider.
+- Update provider-specific tests to match the new provider and remove the
+  now-unused provider-specific request headers.
 
 ## Capabilities
 
@@ -41,8 +42,10 @@ downloads behind the existing `Music`/`Track` interface.
 
 - `service/core.py`: provider base URL, search URL construction, redirect
   handling, and results parsing selector.
-- `service/data.py`: `Track.from_element` selectors for the new markup.
-- `service/headers.json`: request headers reviewed for the new hosts.
+- `service/data.py`: `Track.from_element` selectors for the new markup and
+  removal of the provider-specific `headers` configuration.
+- `service/headers.json`: removed; the provider works with default request
+  headers.
 - `tests/test_service.py`: updated URL, redirect, and markup fixtures.
 - No changes to `Track` field shape, bot handlers, database models, or
   translations; callers continue to use `Music().search()`,

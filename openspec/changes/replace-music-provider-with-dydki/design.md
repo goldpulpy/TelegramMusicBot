@@ -17,7 +17,7 @@ The replacement provider `dydki.net` was inspected directly:
 - `https://dydki.net/` (homepage) uses the same `div.results`/`div.chkd`
   structure with ~99 entries, so it can back `get_top_hits()`.
 - A sampled `data-mp3` URL downloads with `200` and a valid `content-length`
-  using the existing default headers (no special referer required).
+  using default request headers (no special referer required).
 
 ## Goals / Non-Goals
 
@@ -46,12 +46,14 @@ Alternative considered: continue returning a bare value and append the query in
 `search()`; a single URL builder keeps normalization testable and centralized.
 
 **Rely on the HTTP client's redirect following.**
-`_parse_tracks` issues a GET to the search URL with the default
+`_parse_tracks` issues a GET to the search URL with an explicit
 `allow_redirects=True`, so the `301` to `/artist/...` is resolved to the final
-results page transparently. Alternative considered: request with
-`allow_redirects=False` and re-fetch the `Location` header manually. The manual
-path adds a request and handling of relative URLs for no behavioral gain, since
-the redirect target is always the results page.
+results page transparently. The flag is passed explicitly rather than left to
+the client default, and a focused test asserts it so a future change to
+`allow_redirects=False` cannot silently break live search. Alternative
+considered: request with `allow_redirects=False` and re-fetch the `Location`
+header manually. The manual path adds a request and handling of relative URLs
+for no behavioral gain, since the redirect target is always the results page.
 
 **Parse `div.results` / `div.chkd` in `Track.from_element`.**
 `_parse_tracks` locates `div.results` (replacing `ul.playlist`) and iterates
@@ -65,11 +67,12 @@ existing error contract and tests.
 `get_top_hits()` fetches `https://dydki.net/` and reuses `_parse_tracks`, since
 the homepage exposes the same results markup. No separate selector is needed.
 
-**Constants and headers.**
+**Constants; provider-specific headers removed.**
 `BASE_URL` becomes `dydki.net`; a search-endpoint constant is introduced for
-the `/?mp3=` path. `service/headers.json` is reviewed but kept, because the
-sampled audio download succeeded with it; headers remain configurable via
-`ServiceConfig`.
+the `/?mp3=` path. `service/headers.json` is removed and `ServiceConfig` no
+longer carries a `headers` field, because the sampled search, top-hits, and
+audio download all succeed with aiohttp's default request headers. This drops
+the `json`/`Path` file load from service startup.
 
 ## Risks / Trade-offs
 
@@ -79,7 +82,7 @@ sampled audio download succeeded with it; headers remain configurable via
   by tests.
 - **`data-mp3` proxy URLs may expire or require headers later** → download
   failures are already translated to `MusicServiceError` and surfaced to the
-  user; headers stay configurable through `ServiceConfig`.
+  user.
 - **Anti-bot or geo/rate limiting** (the server returns an `x-geoip-country`
   header) → retries with exponential backoff are retained; failures stay
   contained by the handler's existing error handling.

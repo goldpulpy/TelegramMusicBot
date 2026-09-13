@@ -11,8 +11,9 @@
 ## 2. Results parsing
 
 - [x] 2.1 Update `_parse_tracks` in `service/core.py` to locate `div.results`
-      and iterate `div.chkd` entries, relying on default redirect following; verify
-      the updated parse tests return ordered tracks.
+      and iterate `div.chkd` entries, passing `allow_redirects=True` explicitly;
+      verify the updated parse tests return ordered tracks and a focused test
+      asserts the redirect flag is set.
 - [x] 2.2 Update `Track.from_element` in `service/data.py` to read
       `.track__artist`, `.track__title`, and the entry's own `data-mp3` attribute;
       verify valid, missing-name, and missing-audio tests.
@@ -25,10 +26,10 @@
 - [x] 3.1 Update `tests/test_service.py` fixtures and expectations for the new
       URLs, redirect-to-results flow, and `div.results`/`div.chkd` markup, then run
       `uv run poe tests` and confirm the suite passes hermetically.
-- [x] 3.2 Review `service/headers.json` and either keep it or adjust it for the
-      `dydki.net`/`mp3vk.sunproxy.net` hosts; verify with a manual
-      `curl`-based audio download smoke check that the headers still return
-      `audio/mpeg`.
+- [x] 3.2 Remove `service/headers.json` and drop the `headers` field from
+      `ServiceConfig`; verify search, top-hits, and an audio download succeed
+      with aiohttp's default request headers and update the session-lifecycle
+      test accordingly.
 - [x] 3.3 Add a regression test proving a zero-result results container yields
       an empty list and a missing results container raises the documented error;
       verify the new test fails against the old selectors and passes after the

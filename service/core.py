@@ -48,7 +48,7 @@ class Music:
     async def connect(self) -> None:
         """Initialize HTTP session."""
         if self._session is None:
-            self._session = aiohttp.ClientSession(headers=self._config.headers)
+            self._session = aiohttp.ClientSession()
 
     async def disconnect(self) -> None:
         """Close HTTP session."""
@@ -85,6 +85,7 @@ class Music:
             async with self._session.get(
                 url,
                 timeout=ClientTimeout(total=self._config.timeout),
+                allow_redirects=True,
             ) as response:
                 response.raise_for_status()
                 soup = BeautifulSoup(await response.text(), "html.parser")

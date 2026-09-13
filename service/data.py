@@ -2,15 +2,11 @@
 
 from __future__ import annotations
 
-import json
-from dataclasses import dataclass, field
-from pathlib import Path
+from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
     from bs4 import BeautifulSoup, Tag
-
-headers_path = Path(__file__).parent / "headers.json"
 
 
 @dataclass
@@ -18,11 +14,6 @@ class ServiceConfig:
     """Configuration for music service."""
 
     timeout: int = 30
-    headers: dict = field(
-        default_factory=lambda: json.load(
-            Path.open(headers_path, encoding="utf-8"),
-        ),
-    )
 
 
 @dataclass
