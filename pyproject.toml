@@ -5,12 +5,12 @@ description = "A Telegram Music Bot"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "aiogram[i18n]>=3.30.0",
-    "asyncpg>=0.31.0",
+    "aiogram[i18n]>=3.31.0",
+    "asyncpg>=0.32.0",
     "beautifulsoup4>=4.15.0",
-    "pydantic-settings>=2.15.0",
-    "sqlalchemy>=2.0.51",
-    "tenacity>=9.1.4",
+    "pydantic-settings>=2.16.1",
+    "sqlalchemy>=2.1.6",
+    "tenacity>=9.2.1",
 ]
 
 [dependency-groups]
